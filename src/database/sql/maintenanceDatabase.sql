@@ -36,6 +36,16 @@ CREATE TABLE TaskHistory (
 );
 
 
+CREATE TABLE User (
+    user_id INT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(20),
+    password VARCHAR(255) NOT NULL,
+    is_technician BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+
 CREATE TABLE UserResidence 
 (
     user_id INT,
