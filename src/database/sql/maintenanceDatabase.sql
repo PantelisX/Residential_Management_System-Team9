@@ -36,7 +36,7 @@ CREATE TABLE TaskHistory (
 );
 
 
-CREATE TABLE User (
+CREATE TABLE users (
     user_id INT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
