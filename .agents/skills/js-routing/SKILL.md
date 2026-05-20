@@ -1,24 +1,26 @@
 ---
 name: js-routing
-description: Χρησιμοποίησε αυτό το skill όταν ο χρήστης ζητάει τη δημιουργία ή τροποποίηση Express Routes, HTTP μεθόδων (GET, POST, PUT, DELETE) και Controllers στο backend.
+description: Χρησιμοποίησε αυτό το skill όταν ο χρήστης ζητάει τη δημιουργία ή τροποποίηση Express Routes, Controllers, HTTP μεθόδων και προστατευμένων endpoints με Middlewares.
 ---
 
-# Οδηγίες Express Architecture (Routes & Controllers)
+# Οδηγίες Express Architecture (Routes, Controllers & Middlewares)
 
 ## 1. Διαχωρισμός Ευθυνών (Separation of Concerns)
-- **Αρχεία Routes (`/backend/routes`):** Περιέχουν *αποκλειστικά* τους ορισμούς των endpoints και τη σύνδεσή τους με τις αντίστοιχες συναρτήσεις των controllers. Δεν γράφουμε ποτέ business logic ή database queries εδώ.
-- **Αρχεία Controllers (`/backend/controllers`):** Περιέχουν όλη τη λογική της εφαρμογής, την επικοινωνία με τα models/database και την επιστροφή των HTTP responses (`res.status().json()`).
+- **Routes (`/backend/routes/`):** Ορίζουν τα endpoints. Αν ένα endpoint απαιτεί σύνδεση χρήστη, εισάγουμε το `authMiddleware` ως δεύτερη παράμετρο πριν τον controller.
+- **Controllers (`/backend/controllers/`):** Περιέχουν τη λογική. Έχουν πρόσβαση στα στοιχεία του συνδεδεμένου χρήστη μέσω του `req.user` (το οποίο κάνει set το middleware).
+- **Middlewares (`/backend/middlewares/`):** Διαχειρίζονται οριζόντια ζητήματα όπως το Authentication (JWT).
 
-## 2. Πρότυπο Δομής Κώδικα
+## 2. Πρότυπο Δομής Κώδικα (Βασισμένο στο Project)
 
-### Παράδειγμα για Route (`/backend/routes/exampleRoutes.js`)
+### Παράδειγμα Προστατευμένου Route με Middleware
+Όταν ένα endpoint απαιτεί αυθεντικοποίηση, εισάγεις το `authMiddleware` όπως στο παρακάτω πρότυπο:
 ```javascript
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const exampleController = require('../controllers/exampleController');
+const homeController = require("../controllers/homeController");
+const authMiddleware = require("../middlewares/authMiddleware");
 
-// Ορισμός routes με σαφήνεια
-router.post('/tasks', exampleController.createTask);
-router.get('/tasks/:id', exampleController.getTaskById);
+// Το authMiddleware μπαίνει πριν τον controller για να προστατεύσει το route
+router.get("/dashboard", authMiddleware, homeController.getDashboardData);
 
 module.exports = router;
