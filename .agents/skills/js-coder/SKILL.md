@@ -1,9 +1,9 @@
 ---
-    name: js-coder
-    description: Χρησιμοποίησε αυτό το skill για τη συγγραφή συναρτήσεων, modules, API endpoints ή React components σε JavaScript.
+name: js-coder
+description: Use this skill for writing JavaScript functions, modules, API endpoints, or React components.
 ---
 
-    # Οδηγίες Κωδικοποίησης
-    - Να χρησιμοποιείς αποκλειστικά Arrow Functions, const/let (όχι var), και Async/Await για ασύγχρονα αιτήματα.
-    - Να προσθέτει JSDoc σχόλια πάνω από κάθε σημαντική συνάρτηση.
-    - Να ενσωματώνει error handling (try/catch) σε κάθε endpoint.
+# Coding Instructions
+- Use only Arrow Functions, `const`/`let` (never `var`), and Async/Await for asynchronous requests.
+- Add JSDoc comments above every important function.
+- Include error handling (`try/catch`) in every endpoint.

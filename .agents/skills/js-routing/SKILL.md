@@ -1,26 +1,27 @@
 ---
 name: js-routing
-description: Χρησιμοποίησε αυτό το skill όταν ο χρήστης ζητάει τη δημιουργία ή τροποποίηση Express Routes, Controllers, HTTP μεθόδων και προστατευμένων endpoints με Middlewares.
+description: Use this skill when the user requests creation or modification of Express Routes, Controllers, HTTP methods, or protected endpoints with Middlewares.
 ---
 
-# Οδηγίες Express Architecture (Routes, Controllers & Middlewares)
+# Express Architecture Guidelines (Routes, Controllers & Middlewares)
 
-## 1. Διαχωρισμός Ευθυνών (Separation of Concerns)
-- **Routes (`/backend/routes/`):** Ορίζουν τα endpoints. Αν ένα endpoint απαιτεί σύνδεση χρήστη, εισάγουμε το `authMiddleware` ως δεύτερη παράμετρο πριν τον controller.
-- **Controllers (`/backend/controllers/`):** Περιέχουν τη λογική. Έχουν πρόσβαση στα στοιχεία του συνδεδεμένου χρήστη μέσω του `req.user` (το οποίο κάνει set το middleware).
-- **Middlewares (`/backend/middlewares/`):** Διαχειρίζονται οριζόντια ζητήματα όπως το Authentication (JWT).
+## 1. Separation of Concerns
+- **Routes (`/backend/routes/`):** Define the endpoints. If an endpoint requires user authentication, insert the `authMiddleware` as the second parameter before the controller.
+- **Controllers (`/backend/controllers/`):** Contain the business logic. They can access the authenticated user data through `req.user` (which is set by the middleware).
+- **Middlewares (`/backend/middlewares/`):** Handle cross-cutting concerns such as Authentication (JWT).
 
-## 2. Πρότυπο Δομής Κώδικα (Βασισμένο στο Project)
+## 2. Code Structure Pattern (Based on the Project)
 
-### Παράδειγμα Προστατευμένου Route με Middleware
-Όταν ένα endpoint απαιτεί αυθεντικοποίηση, εισάγεις το `authMiddleware` όπως στο παρακάτω πρότυπο:
+### Example of a Protected Route with Middleware
+When an endpoint requires authentication, include the `authMiddleware` as shown in the following pattern:
+
 ```javascript
 const express = require("express");
 const router = express.Router();
 const homeController = require("../controllers/homeController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
-// Το authMiddleware μπαίνει πριν τον controller για να προστατεύσει το route
+// The authMiddleware is placed before the controller to protect the route
 router.get("/dashboard", authMiddleware, homeController.getDashboardData);
 
 module.exports = router;
