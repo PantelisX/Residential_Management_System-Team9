@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import maintenanceService from './services/maintenanceService';
+import tasksService from './services/tasksService';
 import { 
   Box, Grid, Card, CardContent, Typography, 
   Select, MenuItem, FormControl, InputLabel, Chip 
@@ -36,7 +36,7 @@ const CurrentTasks = () => {
       try {
         const startDate = getStartDate(timeFilter);
         
-        const data = await maintenanceService.getCurrentTasks({
+        const data = await tasksService.getCurrentTasks({
           startDate: startDate,
           category: categoryFilter
         });
