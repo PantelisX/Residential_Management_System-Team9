@@ -58,3 +58,46 @@ exports.getCurrentTasks = async (req, res) => {
     });
   }
 };
+
+/**
+ * Fetches completed and cancelled tasks (history) for logged-in user across all residences
+ * @param {import('express').Request} req - Request object
+ * @param {import('express').Response} res - Response object
+ */
+exports.getHistoryTasks = async (req, res) => {
+  try {
+    const userId = req.user.user.id;
+
+    // Query to fetch completed and cancelled tasks for user's residences with address and all needed info
+    const query = `
+      SELECT 
+        mt.task_id,
+        mt.residence_id,
+        mt.status,
+        mt.category,
+        mt.description,
+        mt.end_date,
+        r.address
+      FROM MaintenanceTask mt
+      JOIN UserResidence ur ON mt.residence_id = ur.residence_id
+      JOIN Residence r ON mt.residence_id = r.residence_id
+      WHERE ur.user_id = ?
+      AND mt.status IN ('completed', 'cancelled')
+      ORDER BY mt.end_date DESC
+    `;
+
+    const [rows] = await db.promise().query(query, [userId]);
+
+    res.json({
+      tasks: rows,
+      totalCount: rows.length,
+      success: true
+    });
+  } catch (error) {
+    console.error('Error fetching history tasks:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch history tasks'
+    });
+  }
+};
