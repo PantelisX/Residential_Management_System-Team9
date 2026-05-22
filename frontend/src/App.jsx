@@ -9,6 +9,8 @@ import TasksPage from './pages/home/TasksPage';
 import HistoryPage from './pages/home/HistoryPage';
 import AssignmentsPage from './pages/home/AssignmentsPage';
 import ProfilePage from './pages/home/ProfilePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 
 // Pages (to be implemented)
 // import LoginPage from './pages/LoginPage';
@@ -20,8 +22,8 @@ function App() {
       <AuthProvider>
         <Routes>
           {/* Auth Routes (to be implemented) */}
-          {/* <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} /> */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
           {/* Protected Home Routes */}
           <Route
