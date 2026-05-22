@@ -14,13 +14,13 @@ description: Use this skill when the user requests database connection setup, SQ
 Base all queries and logic exclusively on the following table structure of the `maintenance_system` database:
 
 ### Table: `Residence`
-- `residence_id` (INT, PK)
+- `residence_id` (INT, PK, Auto Increment)
 - `address` (VARCHAR)
 - `owner` (VARCHAR)
 - `description` (TEXT)
 
 ### Table: `MaintenanceTask`
-- `task_id` (INT, PK)
+- `task_id` (INT, PK, Auto Increment)
 - `residence_id` (INT, FK -> Residence.residence_id)
 - `status` (ENUM: `'open'`, `'in_progress'`, `'completed'`, `'cancelled'`)
 - `accepted` (BOOLEAN, DEFAULT FALSE)
@@ -31,7 +31,7 @@ Base all queries and logic exclusively on the following table structure of the `
 - `end_date` (DATE)
 
 ### Table: `TaskHistory`
-- `history_id` (INT, PK)
+- `history_id` (INT, PK, Auto Increment)
 - `task_id` (INT, FK -> MaintenanceTask.task_id)
 - `address` (VARCHAR)
 - `category` (ENUM: `'electrical'`, `'plumbing'`, `'hvac'`, `'landscaping'`, `'other'`)
@@ -39,7 +39,7 @@ Base all queries and logic exclusively on the following table structure of the `
 - `completion_date` (DATE)
 
 ### Table: `User`
-- `user_id` (INT, PK)
+- `user_id` (INT, PK , Auto Increment)
 - `name` (VARCHAR)
 - `email` (VARCHAR, UNIQUE)
 - `phone` (VARCHAR)

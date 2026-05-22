@@ -4,7 +4,7 @@ USE maintenance_system;
 
 CREATE TABLE Residence 
 (
-    residence_id INT PRIMARY KEY, 
+    residence_id INT AUTO_INCREMENT PRIMARY KEY, 
     address VARCHAR(255) NOT NULL,
     owner VARCHAR(255) NOT NULL,
     description TEXT
@@ -12,7 +12,7 @@ CREATE TABLE Residence
 
 
 CREATE TABLE MaintenanceTask (
-    task_id INT PRIMARY KEY,
+    task_id INT AUTO_INCREMENT PRIMARY KEY,
     residence_id INT NOT NULL,
     status ENUM('open', 'in_progress', 'completed', 'cancelled') NOT NULL,
     accepted BOOLEAN NOT NULL DEFAULT FALSE,
@@ -26,7 +26,7 @@ CREATE TABLE MaintenanceTask (
 
 
 CREATE TABLE TaskHistory (
-    history_id INT PRIMARY KEY,
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
     task_id INT NOT NULL,
     address VARCHAR(255) NOT NULL,
     category ENUM('electrical', 'plumbing', 'hvac', 'landscaping', 'other') NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE TaskHistory (
 
 
 CREATE TABLE users (
-    user_id INT PRIMARY KEY,
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(20),
@@ -54,9 +54,7 @@ CREATE TABLE UserResidence
 
     PRIMARY KEY (user_id, residence_id),
 
-    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
 
     FOREIGN KEY (residence_id) REFERENCES Residence(residence_id) ON DELETE CASCADE
 );
-
-

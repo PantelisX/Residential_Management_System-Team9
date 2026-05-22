@@ -5,7 +5,7 @@ const tasksController = require('../controllers/tasksController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 // Get current tasks route (only open/in_progress tasks)
-router.get('/tasksRoutes', authMiddleware, tasksController.getCurrentTasks);
+router.get('/current', authMiddleware, tasksController.getCurrentTasks);
 
 // Get history tasks route (completed/cancelled tasks)
 router.get('/history', authMiddleware, tasksController.getHistoryTasks);

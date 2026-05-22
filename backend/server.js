@@ -4,8 +4,10 @@ require("dotenv").config();
 require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
+const assignmentRoutes = require("./routes/assignmentRoutes");
 const tasksRoutes = require("./routes/tasksRoutes");
 const residenceRoutes = require("./routes/residenceRoutes");
+const maintenanceRoutes = require("./routes/maintenanceRoutes");
 
 const app = express();
 
@@ -21,14 +23,19 @@ app.get("/", (req, res) => {
 // auth routes
 app.use("/api/auth", authRoutes);
 
+// assignment routes
+app.use("/api/assignments", assignmentRoutes);
 //Curr task
 app.use("/api/tasks", tasksRoutes);
 
 // residence routes
 app.use("/api/residences", residenceRoutes);
 
+// maintenance routes
+app.use("/api/maintenance", maintenanceRoutes);
+
 // port
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 
 // start server
 app.listen(PORT, () => {

@@ -73,9 +73,14 @@ async function login(req, res) {
           is_technician: user.is_technician
         }
       });
-    } catch (err) {
-      res.status(500).json({ message: 'Server error', error: err.message });
-    }
+    }  catch (err) {
+        console.error('REGISTER ERROR:', err);
+      
+        res.status(500).json({
+          message: 'Server error',
+          error: err.message
+        });
+      }
   }
   
   module.exports = {
