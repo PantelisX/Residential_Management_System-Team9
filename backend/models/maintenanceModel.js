@@ -19,15 +19,17 @@ const createTask = async (taskData) => {
       description, 
       start_date,
       status,
-      accepted
-    ) VALUES (?, ?, ?, ?, 'open', FALSE)
+      accepted,
+      tech_id
+    ) VALUES (?, ?, ?, ?, 'open', FALSE, ?)
   `;
   
   const params = [
     taskData.residence_id,
     taskData.category,
     taskData.description,
-    taskData.start_date
+    taskData.start_date,
+    taskData.tech_id
   ];
   
   try {

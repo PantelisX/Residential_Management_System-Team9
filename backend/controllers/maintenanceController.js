@@ -10,13 +10,13 @@ const userModel = require('../models/userModel');
  */
 const createTask = async (req, res, next) => {
   try {
-    const { residence_id, category, description, start_date } = req.body;
+    const { residence_id, category, description, start_date, tech_id } = req.body;
     
     const userId = req.user.user_id;
-
-    if (!residence_id || !category || !description || !start_date) {
+    
+    if (!residence_id || !category || !description || !start_date || !tech_id) {
       return res.status(400).json({ 
-        error: 'All fields (residence_id, category, description, start_date) are required' 
+        error: 'All fields (residence_id, category, description, start_date, tech_id) are required' 
       });
     }
 
@@ -31,7 +31,8 @@ const createTask = async (req, res, next) => {
       residence_id,
       category,
       description,
-      start_date
+      start_date,
+      tech_id
     });
 
     res.status(201).json({ 
