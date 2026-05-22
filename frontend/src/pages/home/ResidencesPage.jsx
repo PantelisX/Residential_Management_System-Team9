@@ -62,6 +62,7 @@ function ResidencesPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); 
+    setError(null);
     try {
       await maintenanceService.createTask({
         residence_id: selectedResidenceId,
@@ -77,7 +78,7 @@ function ResidencesPage() {
       fetchResidences();
     } catch (err) {
       console.error("Error creating task:", err);
-      alert("Error creating task.");
+      setError(err.message || "Error creating task.");
     }
   };
 
@@ -148,6 +149,11 @@ function ResidencesPage() {
               </h3>
               <button className="close-btn" onClick={() => setIsModalOpen(false)}>×</button>
             </div>
+            {error && (
+              <div className="error-message">
+                <p>{error}</p>
+              </div>
+            )}
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="category">Category</label>

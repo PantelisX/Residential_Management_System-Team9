@@ -9,7 +9,7 @@ const db = require('../config/db'); // Assuming db connection is set up here
 exports.getCurrentTasks = async (req, res) => {
   try {
     const { startDate, category } = req.query;
-    const userId = req.user.user.id;
+    const userId = req.user.user_id;
 
     // Query to fetch tasks for user's residences with status 'open' or 'in_progress', filtered by date and category
     let query = `
