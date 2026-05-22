@@ -22,7 +22,14 @@ async function createUser(user) {
   return result;
 }
 
+const getTechnicians = async () => {
+  const sql = `SELECT user_id, name FROM users WHERE is_technician = true`;
+  const [rows] = await db.promise().query(sql);
+  return rows;
+}
+
 module.exports = {
   findUserByEmail,
-  createUser
+  createUser,
+  getTechnicians
 };

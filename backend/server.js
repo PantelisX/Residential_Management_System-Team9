@@ -6,6 +6,7 @@ require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const tasksRoutes = require("./routes/tasksRoutes");
 const residenceRoutes = require("./routes/residenceRoutes");
+const maintenanceRoutes = require("./routes/maintenanceRoutes");
 
 const app = express();
 
@@ -26,6 +27,9 @@ app.use("/api/tasks", tasksRoutes);
 
 // residence routes
 app.use("/api/residences", residenceRoutes);
+
+// maintenance routes
+app.use("/api/maintenance", maintenanceRoutes);
 
 // port
 const PORT = process.env.PORT || 5000;
