@@ -1,3 +1,8 @@
+function App() {
+  return <AssignmentPage />;
+}
+
+export default App;
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';

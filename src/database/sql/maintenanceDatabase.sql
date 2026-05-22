@@ -54,9 +54,7 @@ CREATE TABLE UserResidence
 
     PRIMARY KEY (user_id, residence_id),
 
-    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
 
     FOREIGN KEY (residence_id) REFERENCES Residence(residence_id) ON DELETE CASCADE
 );
-
-

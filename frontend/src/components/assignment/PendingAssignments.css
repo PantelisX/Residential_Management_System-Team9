@@ -1,0 +1,63 @@
+.pending-assignments {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.no-assignments {
+  color: #888;
+  font-style: italic;
+}
+
+.assignment-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.assignment-details {
+  margin-bottom: 15px;
+}
+
+.assignment-field {
+  margin: 8px 0;
+  color: #333;
+}
+
+.assignment-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn-accept {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-accept:hover {
+  background-color: #45a049;
+}
+
+.btn-decline {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-decline:hover {
+  background-color: #e53935;
+}

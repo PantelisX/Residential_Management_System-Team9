@@ -4,6 +4,7 @@ require("dotenv").config();
 require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
+const assignmentRoutes = require("./routes/assignmentRoutes");
 const tasksRoutes = require("./routes/tasksRoutes");
 const residenceRoutes = require("./routes/residenceRoutes");
 const maintenanceRoutes = require("./routes/maintenanceRoutes");
@@ -22,6 +23,8 @@ app.get("/", (req, res) => {
 // auth routes
 app.use("/api/auth", authRoutes);
 
+// assignment routes
+app.use("/api/assignments", assignmentRoutes);
 //Curr task
 app.use("/api/tasks", tasksRoutes);
 
