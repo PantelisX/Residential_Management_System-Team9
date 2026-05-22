@@ -1,30 +1,22 @@
 'use strict';
 
 const db = require('../config/db');
-const util = require('util');
 const notificationController = require('./notificationController');
 const schedulerModel = require('../models/schedulerModel');
 
-const query = util.promisify(db.query).bind(db);
-
 const AssignmentListController = {};
 
-/**
- * Retrieves maintenance tasks awaiting technician response
- * Pending tasks are those where accepted IS NULL OR (accepted = FALSE and status = 'open')
- * Returns tasks with related technician and residence information
- */
 AssignmentListController.getPendingAssignments = async (req, res) => {
   try {
-    const tasks = await query(
+    const [tasks] = await db.query(
       `SELECT mt.task_id, mt.category, mt.description, mt.start_date, 
               t.user_id AS technician_id, t.name AS technician_name, t.email AS technician_email, t.phone AS technician_phone,
               r.address AS residence_address, r.owner AS residence_owner
        FROM MaintenanceTask mt
-       LEFT JOIN User t ON mt.tech_id = t.user_id
+       LEFT JOIN users t ON mt.tech_id = t.user_id
        JOIN Residence r ON mt.residence_id = r.residence_id
-       WHERE mt.accepted IS NULL 
-       OR (mt.accepted = FALSE AND mt.status = 'open')`
+       WHERE mt.status =  'open'
+       AND (mt.accepted = FALSE OR mt.status IS NULL)`
     );
     return res.status(200).json(tasks);
   } catch (error) {
@@ -33,11 +25,6 @@ AssignmentListController.getPendingAssignments = async (req, res) => {
   }
 };
 
-/**
- * Accepts a maintenance assignment
- * Updates the task to set accepted = TRUE and removes from notification list
- * Triggers notification to relevant parties
- */
 AssignmentListController.acceptAssignment = async (req, res) => {
   try {
     const { task_id } = req.body;
@@ -46,17 +33,17 @@ AssignmentListController.acceptAssignment = async (req, res) => {
       return res.status(400).json({ error: 'task_id is required' });
     }
 
-    const tasks = await query(
+    const [tasks] = await db.query(
       `SELECT mt.task_id, mt.description, mt.category, mt.start_date, mt.residence_id, 
               r.address, r.owner, mt.tech_id, t.email AS technician_email, t.name AS technician_name, t.phone AS technician_phone,
               u2.email AS resident_email, u2.name AS resident_name,
               u3.email AS owner_email, u3.name AS owner_name
        FROM MaintenanceTask mt
        JOIN Residence r ON mt.residence_id = r.residence_id
-       LEFT JOIN User t ON mt.tech_id = t.user_id
+       LEFT JOIN users t ON mt.tech_id = t.user_id
        LEFT JOIN UserResidence ur ON mt.residence_id = ur.residence_id
-       LEFT JOIN User u2 ON ur.user_id = u2.user_id
-       LEFT JOIN User u3 ON r.owner = u3.email
+       LEFT JOIN users u2 ON ur.user_id = u2.user_id
+       LEFT JOIN users u3 ON r.owner = u3.email
        WHERE mt.task_id = ?`,
       [task_id]
     );
@@ -67,7 +54,7 @@ AssignmentListController.acceptAssignment = async (req, res) => {
       return res.status(404).json({ error: 'Task not found' });
     }
 
-    await query(
+    await db.query(
       `UPDATE MaintenanceTask 
        SET accepted = TRUE 
        WHERE task_id = ?`,
@@ -83,11 +70,6 @@ AssignmentListController.acceptAssignment = async (req, res) => {
   }
 };
 
-/**
- * Declines a maintenance assignment
- * Updates the task to set accepted = FALSE and removes from notification list
- * Triggers notification to relevant parties
- */
 AssignmentListController.declineAssignment = async (req, res) => {
   try {
     const {task_id} = req.body;
@@ -96,17 +78,17 @@ AssignmentListController.declineAssignment = async (req, res) => {
       return res.status(400).json({ error: 'task_id is required' });
     }
 
-    const tasks = await query(
+    const [tasks] = await db.query(
       `SELECT mt.task_id, mt.description, mt.category, mt.start_date, mt.residence_id, 
               r.address, r.owner, mt.tech_id, t.email AS technician_email, t.name AS technician_name, t.phone AS technician_phone,
               u2.email AS resident_email, u2.name AS resident_name,
               u3.email AS owner_email, u3.name AS owner_name
        FROM MaintenanceTask mt
        JOIN Residence r ON mt.residence_id = r.residence_id
-       LEFT JOIN User t ON mt.tech_id = t.user_id
+       LEFT JOIN users t ON mt.tech_id = t.user_id
        LEFT JOIN UserResidence ur ON mt.residence_id = ur.residence_id
-       LEFT JOIN User u2 ON ur.user_id = u2.user_id
-       LEFT JOIN User u3 ON r.owner = u3.email
+       LEFT JOIN users u2 ON ur.user_id = u2.user_id
+       LEFT JOIN users u3 ON r.owner = u3.email
        WHERE mt.task_id = ?`,
       [task_id]
     );
@@ -117,9 +99,9 @@ AssignmentListController.declineAssignment = async (req, res) => {
       return res.status(404).json({ error: 'Task not found' });
     }
 
-    await query(
+    await db.query(
       `UPDATE MaintenanceTask 
-       SET accepted = FALSE 
+       SET accepted = FALSE, status = 'cancelled' 
        WHERE task_id = ?`,
       [task_id]
     );
@@ -133,11 +115,6 @@ AssignmentListController.declineAssignment = async (req, res) => {
   }
 };
 
-/**
- * Retrieves accepted maintenance tasks
- * Uses schedulerModel.getAcceptedTasks() to fetch data
- * Returns tasks with residence address, category, start_date, and description
- */
 AssignmentListController.getAcceptedAssignments = async (req, res) => {
   try {
     const tasks = await schedulerModel.getAcceptedTasks();
@@ -161,17 +138,17 @@ AssignmentListController.updateTaskStatus = async (req, res) => {
       return res.status(400).json({ error: 'Invalid status value. Must be open, in_progress, completed, or cancelled' });
     }
 
-    const tasks = await query(
+    const [tasks] = await db.query(
       `SELECT mt.task_id, mt.status, mt.category, mt.description, mt.residence_id, 
               r.address, r.owner, mt.tech_id, t.email AS technician_email, t.name AS technician_name, t.phone AS technician_phone,
               u2.email AS resident_email, u2.name AS resident_name,
               u3.email AS owner_email, u3.name AS owner_name
        FROM MaintenanceTask mt
        JOIN Residence r ON mt.residence_id = r.residence_id
-       LEFT JOIN User t ON mt.tech_id = t.user_id
+       LEFT JOIN users t ON mt.tech_id = t.user_id
        LEFT JOIN UserResidence ur ON mt.residence_id = ur.residence_id
-       LEFT JOIN User u2 ON ur.user_id = u2.user_id
-       LEFT JOIN User u3 ON r.owner = u3.email
+       LEFT JOIN users u2 ON ur.user_id = u2.user_id
+       LEFT JOIN users u3 ON r.owner = u3.email
        WHERE mt.task_id = ?`,
       [task_id]
     );
@@ -184,7 +161,7 @@ AssignmentListController.updateTaskStatus = async (req, res) => {
 
     const oldStatus = task.status;
 
-    await query(
+    await db.query(
       `UPDATE MaintenanceTask 
        SET status = ? 
        WHERE task_id = ?`,
