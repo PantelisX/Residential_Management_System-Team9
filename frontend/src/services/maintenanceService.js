@@ -69,6 +69,19 @@ const maintenanceService = {
     } catch (error) {
       throw error.response?.data || error.message;
     }
+  },
+
+  /**
+   * Get history tasks (completed and cancelled tasks)
+   * @returns {Promise<{success: boolean, tasks: Array, totalCount: number}>} History tasks data
+   */
+  getHistoryTasks: async () => {
+    try {
+      const response = await api.get('/api/tasks/history');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
   }
 };
 
