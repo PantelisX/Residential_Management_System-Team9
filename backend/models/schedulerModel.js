@@ -97,18 +97,14 @@ SchedulerModel.getRejectedTasks = async () => {
  * @returns {boolean} true if notification generated, false otherwise
  */
 SchedulerModel.notifyStatusChange = (task, oldStatus, newStatus) => {
-  if ((oldStatus === 'open' && newStatus === 'in_progress') || 
-      (oldStatus === 'in_progress' && newStatus === 'completed')) {
-    console.log(`Notification: Task ${task.task_id} status changed from "${oldStatus}" to "${newStatus}"`);
-    console.log(`  Technician: ${task.technician_name} (${task.technician_email})`);
-    console.log(`  Resident: ${task.resident_name} (${task.resident_email})`);
-    console.log(`  Owner: ${task.owner_name} (${task.owner_email})`);
-    console.log(`  Location: ${task.address}`);
-    console.log(`  Category: ${task.category}`);
-    console.log(`  Description: ${task.description}`);
-    return true;
-  }
-  return false;
+  console.log(`Notification: Task ${task.task_id} status changed from "${oldStatus}" to "${newStatus}"`);
+  console.log(`  Technician: ${task.technician_name} (${task.technician_email})`);
+  console.log(`  Resident: ${task.resident_name} (${task.resident_email})`);
+  console.log(`  Owner: ${task.owner_name} (${task.owner_email})`);
+  console.log(`  Location: ${task.address}`);
+  console.log(`  Category: ${task.category}`);
+  console.log(`  Description: ${task.description}`);
+  return true;
 };
 
 /**
