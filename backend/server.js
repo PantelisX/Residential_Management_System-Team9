@@ -35,7 +35,7 @@ app.use("/api/residences", residenceRoutes);
 app.use("/api/maintenance", maintenanceRoutes);
 
 // port
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 
 // start server
 app.listen(PORT, () => {
