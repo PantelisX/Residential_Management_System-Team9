@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 const checkAccess = async (userId, residenceId) => {
   const sql = `SELECT * FROM UserResidence WHERE user_id = ? AND residence_id = ?`;
-  const [rows] = await db.promise().execute(sql, [userId, residenceId]);
+  const [rows] = await db.execute(sql, [userId, residenceId]);
   return rows.length > 0;
 };
 
@@ -33,14 +33,45 @@ const createTask = async (taskData) => {
   ];
   
   try {
-    const [result] = await db.promise().execute(sql, params);
+    const [result] = await db.execute(sql, params);
     return result;
   } catch (error) {
     throw new Error('Failed to create maintenance task: ' + error.message);
   }
 };
 
+/**
+ * Get all maintenance tasks for a user
+ * @param {number} userId - User ID
+ * @returns {Promise<Array>} Array of maintenance tasks
+ */
+const getTasks = async (userId) => {
+
+  const sql = `
+    SELECT
+      mt.task_id,
+      mt.category,
+      mt.description,
+      mt.status,
+      mt.start_date,
+      mt.end_date,
+      r.address
+    FROM MaintenanceTask mt
+    JOIN Residence r
+      ON mt.residence_id = r.residence_id
+    JOIN UserResidence ur
+      ON r.residence_id = ur.residence_id
+    WHERE ur.user_id = ?
+    AND mt.status IN ('open', 'in_progress')
+    ORDER BY mt.task_id DESC
+  `;
+
+  const [rows] = await db.execute(sql, [userId]);
+
+  return rows;
+};
 module.exports = {
   checkAccess,
-  createTask
+  createTask,
+  getTasks
 };

@@ -1,83 +1,125 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import './AssignmentPage.css';
+
 import PendingAssignments from '../components/assignment/PendingAssignments';
 import CurrentTasks from '../components/assignment/CurrentTasks';
 
-//const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-const API_URL = 'http://localhost:5000/api';
-/*
-function AssignmentPage() {
-  return (
-    <div>
-      <h1>Assignment Page Works</h1>
-    </div>
-  );
-}
+function AssignmentsPage() {
 
-export default AssignmentPage;
-*/
-
-function AssignmentPage() {
   const [pendingAssignments, setPendingAssignments] = useState([]);
   const [acceptedTasks, setAcceptedTasks] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  /**
+   * Refresh assignments data
+   */
   const refreshData = async () => {
+
     try {
+
       const [pendingRes, acceptedRes] = await Promise.all([
-        axios.get(`${API_URL}/assignments/pending`),
-        axios.get(`${API_URL}/assignments/accepted`)
+        api.get('/api/assignments/pending'),
+        api.get('/api/assignments/accepted')
       ]);
-      setPendingAssignments(pendingRes.data);
-      setAcceptedTasks(acceptedRes.data);
+
+      setPendingAssignments(pendingRes.data || []);
+      setAcceptedTasks(acceptedRes.data || []);
+
+      setError(null);
+
     } catch (err) {
-      setError(err.response?.data?.error || 'Error fetching data');
+
       console.error('Error refreshing assignments:', err);
+
+      setError(
+        err.response?.data?.error ||
+        'Error fetching assignments'
+      );
+
     } finally {
+
       setLoading(false);
     }
   };
 
+  /**
+   * Fetch assignments on component mount
+   */
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [pendingRes, acceptedRes] = await Promise.all([
-          axios.get(`${API_URL}/assignments/pending`),
-          axios.get(`${API_URL}/assignments/accepted`)
-        ]);
-        setPendingAssignments(pendingRes.data);
-        setAcceptedTasks(acceptedRes.data);
-      } catch (err) {
-        setError(err.response?.data?.error || 'Error fetching data');
-        console.error('Error fetching assignments:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchData();
+    refreshData();
+
   }, []);
 
-  if (loading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">{error}</div>;
+  /**
+   * Loading state
+   */
+  if (loading) {
+
+    return (
+      <div className="loading">
+        Loading...
+      </div>
+    );
+  }
+
+  /**
+   * Error state
+   */
+  if (error) {
+
+    return (
+      <div className="error">
+        {error}
+      </div>
+    );
+  }
 
   return (
+
     <div className="assignment-page">
-      <h1 className="page-title">Assignment Page</h1>
+
+      <h1 className="page-title">
+        Assignment Page
+      </h1>
+
       <div className="sections-container">
+
+        {/* Pending Assignments */}
         <section className="section">
-          <h2>Pending Assignments</h2>
-          <PendingAssignments assignments={pendingAssignments} onRefresh={refreshData} />
+
+          <h2>
+            Pending Assignments
+          </h2>
+
+          <PendingAssignments
+            assignments={pendingAssignments}
+            onRefresh={refreshData}
+          />
+
         </section>
+
+        {/* Current Tasks */}
         <section className="section">
-          <h2>Current Tasks</h2>
-          <CurrentTasks tasks={acceptedTasks} onRefresh={refreshData} />
+
+          <h2>
+            Current Tasks
+          </h2>
+
+          <CurrentTasks
+            tasks={acceptedTasks}
+            onRefresh={refreshData}
+          />
+
         </section>
+
       </div>
+
     </div>
   );
 }
 
-export default AssignmentPage;
+export default AssignmentsPage;

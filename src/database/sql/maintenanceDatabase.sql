@@ -13,15 +13,24 @@ CREATE TABLE Residence
 
 CREATE TABLE MaintenanceTask (
     task_id INT AUTO_INCREMENT PRIMARY KEY,
+
     residence_id INT NOT NULL,
-    status ENUM('open', 'in_progress', 'completed', 'cancelled') NOT NULL,
+
+    status ENUM('open','in_progress','completed','cancelled') NOT NULL DEFAULT 'open',
+
     accepted BOOLEAN NOT NULL DEFAULT FALSE,
+
     tech_id INT,
-    category ENUM('electrical', 'plumbing', 'hvac', 'landscaping', 'other') NOT NULL,
-    description TEXT,
-    start_date DATE,
-    end_date DATE,
-    FOREIGN KEY (residence_id) REFERENCES Residence(residence_id)
+
+    category ENUM('electrical','plumbing','hvac','landscaping','other') NOT NULL,
+
+    description TEXT,start_date DATE,end_date DATE,
+
+    FOREIGN KEY (residence_id)
+        REFERENCES Residence(residence_id),
+
+    FOREIGN KEY (tech_id)
+        REFERENCES users(user_id)
 );
 
 

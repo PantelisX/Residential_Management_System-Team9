@@ -38,7 +38,7 @@ const getResidenceData = async (residenceId) => {
 
     query += ' GROUP BY r.residence_id, r.address, r.owner, r.description';
 
-    const [rows] = await db.promise().query(query, params);
+    const [rows] = await db.query(query, params);
     return rows;
   } catch (error) {
     console.error('Error retrieving residence data:', error);

@@ -44,6 +44,31 @@ const createTask = async (req, res, next) => {
   }
 };
 
+
+/**
+ * Get all maintenance tasks for the authenticated user
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @param {Function} next - Next middleware function
+ */
+const getTasks = async (req, res, next) => {
+
+  try {
+
+    const userId = req.user.user_id;
+
+    const tasks = await maintenanceModel.getTasks(userId);
+
+    res.json({
+      tasks
+    });
+
+  } catch (error) {
+
+    next(error);
+  }
+};
+
 /**
  * Get all technicians
  * @param {Object} req - Request object
@@ -61,5 +86,6 @@ const getTechnicians = async (req, res, next) => {
 
 module.exports = {
   createTask,
+  getTasks,
   getTechnicians
 };

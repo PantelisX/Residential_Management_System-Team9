@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import maintenanceService from '../../services/maintenanceService';
+
 import {
   Box,
   Grid,
@@ -185,9 +186,9 @@ const HistoryPage = () => {
 
       {/* Filters Section */}
       <Paper sx={{ p: 3, mb: 3, backgroundColor: '#f5f5f5' }}>
-        <Grid container spacing={2} alignItems="flex-end">
+        <Grid container spacing={2} sx={{ alignItems: 'flex-end' }}>
           {/* Residence Filter */}
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <FormControl fullWidth size="small">
               <InputLabel id="residence-filter-label">Residence</InputLabel>
               <Select
@@ -210,7 +211,7 @@ const HistoryPage = () => {
           </Grid>
 
           {/* Category Filter */}
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <FormControl fullWidth size="small">
               <InputLabel id="category-filter-label">Category</InputLabel>
               <Select
@@ -233,7 +234,7 @@ const HistoryPage = () => {
           </Grid>
 
           {/* Sort Controls */}
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <Stack direction="row" spacing={1}>
               <Button
                 variant="outlined"

@@ -51,7 +51,7 @@ const getTaskHistory = async (userId, residenceId) => {
 
     query += ' ORDER BY mt.end_date DESC';
 
-    const [rows] = await db.promise().query(query, params);
+    const [rows] = await db.query(query, params);
     return rows;
   } catch (error) {
     console.error('Error retrieving task history:', error);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import tasksService from './services/tasksService';
+import tasksService from '../../services/tasksService';
 import { 
   Box, Grid, Card, CardContent, Typography, 
   Select, MenuItem, FormControl, InputLabel, Chip 

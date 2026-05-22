@@ -66,7 +66,7 @@ exports.getCurrentTasks = async (req, res) => {
  */
 exports.getHistoryTasks = async (req, res) => {
   try {
-    const userId = req.user.user.id;
+    const userId = req.user.user_id;
 
     // Query to fetch completed and cancelled tasks for user's residences with address and all needed info
     const query = `
@@ -86,7 +86,7 @@ exports.getHistoryTasks = async (req, res) => {
       ORDER BY mt.end_date DESC
     `;
 
-    const [rows] = await db.promise().query(query, [userId]);
+    const [rows] = await db.query(query, [userId]);
 
     res.json({
       tasks: rows,

@@ -28,8 +28,8 @@ async function createUser(user) {
 }
 
 const getTechnicians = async () => {
-  const sql = `SELECT user_id, name FROM users WHERE is_technician = true`;
-  const [rows] = await db.promise().query(sql);
+  const sql = `SELECT user_id, name FROM users WHERE is_technician = 1`;
+  const [rows] = await db.query(sql);
   return rows;
 }
 

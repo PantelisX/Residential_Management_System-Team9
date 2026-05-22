@@ -23,10 +23,34 @@ async function getUserResidences(userId) {
     ORDER BY r.address ASC
   `;
   
-  const [rows] = await db.promise().query(sql, [userId]);
+  const [rows] = await db.query(sql, [userId]);
   return rows;
 }
 
+async function createResidence(userId, address, description) {
+
+  const [result] = await db.execute(
+    `
+    INSERT INTO Residence (address, description)
+    VALUES (?, ?)
+    `,
+    [address, description]
+  );
+
+  const residenceId = result.insertId;
+
+  await db.execute(
+    `
+    INSERT INTO UserResidence (user_id, residence_id, user_role)
+    VALUES (?, ?, ?)
+    `,
+    [userId, residenceId, 'owner']
+  );
+
+  return residenceId;
+}
+
 module.exports = {
-  getUserResidences
+  getUserResidences,
+  createResidence
 };

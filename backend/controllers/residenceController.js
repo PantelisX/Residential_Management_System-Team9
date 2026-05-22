@@ -25,6 +25,37 @@ async function getResidencesForUser(req, res) {
   }
 }
 
+async function createResidence(req, res) {
+  try {
+    const userId = req.user.user_id;
+
+    const {
+      address,
+      description
+    } = req.body;
+
+    const residenceId = await residenceModel.createResidence(
+      userId,
+      address,
+      description
+    );
+
+    res.status(201).json({
+      message: 'Residence created successfully',
+      residence_id: residenceId
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      message: 'Server error',
+      error: err.message
+    });
+  }
+}
+
 module.exports = {
-  getResidencesForUser
+  getResidencesForUser,
+  createResidence
 };
