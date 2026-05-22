@@ -45,6 +45,49 @@ function ResidencesPage() {
         <div className="residences-container">
           <div className="loading">Loading residences...</div>
         </div>
+        {isModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h3>Create New Task for {residences.find(r => r.residence_id === selectedResidenceId)?.address}</h3>
+                <button className="close-btn" onClick={() => setIsModalOpen(false)}>×</button>
+              </div>
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="category">Category</label>
+                  <select id="category" value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
+                    <option value="">Select category</option>
+                    <option value="electrical">Electrical</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="hvac">HVAC</option>
+                    <option value="landscaping">Landscaping</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="description">Description</label>
+                  <textarea id="description" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="start_date">Start Date</label>
+                  <input id="start_date" type="date" value={formData.start_date} onChange={(e) => setFormData({...formData, start_date: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="technician">Technician</label>
+                  <select id="technician" value={formData.technician_id} onChange={(e) => setFormData({...formData, technician_id: e.target.value})}>
+                    {technicians.map(tech => (
+                      <option key={tech.user_id} value={tech.user_id}>{tech.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                  <button type="submit" className="btn btn-primary">Create Task</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

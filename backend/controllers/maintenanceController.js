@@ -12,12 +12,21 @@ const createTask = async (req, res, next) => {
   try {
     const { residence_id, category, description, start_date } = req.body;
     
+    const userId = req.user.user_id;
+
     if (!residence_id || !category || !description || !start_date) {
       return res.status(400).json({ 
         error: 'All fields (residence_id, category, description, start_date) are required' 
       });
     }
 
+    const hasAccess = await maintenanceModel.checkAccess(userId, residence_id);
+    if (!hasAccess) {
+      return res.status(403).json({ 
+        error: 'Access denied: You do not have permission to create tasks for this residence.' 
+      });
+    }
+    
     const result = await maintenanceModel.createTask({
       residence_id,
       category,
@@ -52,8 +61,4 @@ const getTechnicians = async (req, res, next) => {
 module.exports = {
   createTask,
   getTechnicians
-};
-
-module.exports = {
-  createTask
 };
