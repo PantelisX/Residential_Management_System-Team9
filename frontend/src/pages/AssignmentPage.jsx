@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import './AssignmentPage.css';
+import '../styles/AssignmentPage.css';
 
 import PendingAssignments from '../components/assignment/PendingAssignments';
 import CurrentTasks from '../components/assignment/CurrentTasks';

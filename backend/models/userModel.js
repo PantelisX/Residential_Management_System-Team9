@@ -41,9 +41,9 @@ async function createUser(user) {
 }
 
 //Get all technicians
-const getTechnicians = async (currentUserId) => {
+const getTechnicians = async (excludeUserId) => {
   const sql = `SELECT user_id, name FROM users WHERE is_technician = 1 AND user_id != ?`;
-  const [rows] = await db.query(sql, [currentUserId]);
+  const [rows] = await db.query(sql, [excludeUserId]);
   return rows;
 }
 

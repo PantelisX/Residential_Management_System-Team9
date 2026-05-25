@@ -1,6 +1,6 @@
 import React from 'react';
 import TaskModal from './TaskModal';
-import './CurrentTasks.css';
+import '../../styles/CurrentTasks.css';
 
 function CurrentTasks({ tasks, onRefresh }) {
   const [selectedTask, setSelectedTask] = React.useState(null);
