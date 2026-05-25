@@ -12,9 +12,12 @@ export const AuthProvider = ({ children }) => {
   // Initialize auth state from localStorage
   useEffect(() => {
     const savedToken = getToken();
-    if (savedToken) {
+
+    const savedUser = localStorage.getItem('user');
+    if (savedToken && savedUser) {
       setToken(savedToken);
       setIsAuthenticated(true);
+      setUser(JSON.parse(savedUser));
       // TODO: Fetch user data from API using the token
     }
     setLoading(false);
@@ -25,6 +28,7 @@ export const AuthProvider = ({ children }) => {
     setToken(authToken);
     setIsAuthenticated(true);
     localStorage.setItem('token', authToken);
+    localStorage.setItem('user', JSON.stringify(userData));
   };
 
   const logout = () => {
@@ -32,6 +36,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setIsAuthenticated(false);
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   };
 
   const value = {

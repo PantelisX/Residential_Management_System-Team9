@@ -27,24 +27,31 @@ async function getUserResidences(userId) {
   return rows;
 }
 
-async function createResidence(userId, address, description) {
+async function createResidence(
+  userId,
+  address,
+  description
+) {
 
-  const [result] = await db.execute(
-    `
-    INSERT INTO Residence (address, description)
-    VALUES (?, ?)
-    `,
-    [address, description]
-  );
+  /**
+   * Insert residence
+   */
+  const sql = `INSERT INTO Residence (address,description) VALUES (?, ?)`;
 
+  const [result] = await db.execute( sql,[address,description]);
+
+  /**
+   * Get new residence id
+   */
   const residenceId = result.insertId;
 
+  /**
+   * Connect user with residence
+   */
   await db.execute(
-    `
-    INSERT INTO UserResidence (user_id, residence_id, user_role)
-    VALUES (?, ?, ?)
-    `,
-    [userId, residenceId, 'owner']
+
+    `INSERT INTO UserResidence (user_id,residence_id)
+     VALUES (?, ?)`,[userId,residenceId]
   );
 
   return residenceId;

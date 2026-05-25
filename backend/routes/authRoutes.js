@@ -1,9 +1,33 @@
 // backend/routes/authRoutes.js
+
 const express = require('express');
+
 const router = express.Router();
-const { register, login } = require('../controllers/authController');
+
+const {
+  register,
+  login,
+  getProfile,
+  updateProfile
+} = require('../controllers/authController');
+
+const authMiddleware = require('../middlewares/authMiddleware');
 
 router.post('/register', register);
+
 router.post('/login', login);
 
+router.get(
+  '/profile',
+  authMiddleware,
+  getProfile
+);
+
+router.put(
+  '/profile',
+  authMiddleware,
+  updateProfile
+);
+
+console.log('AUTH ROUTES LOADED');
 module.exports = router;

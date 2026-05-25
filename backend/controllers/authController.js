@@ -82,8 +82,50 @@ async function login(req, res) {
         });
       }
   }
+
+  async function getProfile(req, res) {
+  try {
+    const userId = req.user.user_id;
+    const user = await userModel.getUserById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ message: 'Success', user });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+}
+
+
+  async function updateProfile(req, res) {
+  try {
+    const userId = req.user.user_id;
+    const { name, phone } = req.body;
+
+    // Validate required fields
+    if (!name || name.trim() === '') {
+      return res.status(400).json({ message: 'Name is required' });
+    }
+
+    const updatedUser = await userModel.updateUserProfile(userId, name.trim(), phone || null);
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ message: 'Profile updated successfully', user: updatedUser });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+}
   
-  module.exports = {
-    register,
-    login
-  };
+console.log({
+  register,
+  login,
+  getProfile,
+  updateProfile
+});
+
+  module.exports = {register, login, getProfile, updateProfile};

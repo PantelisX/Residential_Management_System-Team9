@@ -46,7 +46,12 @@ function ResidencesPage() {
   const fetchTechnicians = async () => {
     try {
       const techData = await userService.getTechnicians();
-      setTechnicians(techData || []);
+      console.log('All technicians from API:', techData);
+      console.log('Current user:', user);
+      console.log('Current user ID:', user?.user_id);
+      const filteredTechs = techData.filter(tech => String(tech.user_id) !== String(user?.user_id));
+      console.log('After filtering:', filteredTechs);
+      setTechnicians(filteredTechs || []);
     } catch (err) {
       console.error('Error fetching technicians:', err);
     }

@@ -65,13 +65,6 @@ SchedulerModel.getRejectedTasks = async () => {
 };
 
 SchedulerModel.notifyStatusChange = (task, oldStatus, newStatus) => {
-  console.log(`Notification: Task ${task.task_id} status changed from "${oldStatus}" to "${newStatus}"`);
-  console.log(`  Technician: ${task.technician_name} (${task.technician_email})`);
-  console.log(`  Resident: ${task.resident_name} (${task.resident_email})`);
-  console.log(`  Owner: ${task.owner_name} (${task.owner_email})`);
-  console.log(`  Location: ${task.address}`);
-  console.log(`  Category: ${task.category}`);
-  console.log(`  Description: ${task.description}`);
   return true;
 };
 
@@ -141,13 +134,6 @@ SchedulerModel.generateNotification = (type, data) => {
 
     case 'task_accepted':
       data.forEach(task => {
-        notifications.push({
-          type: 'task_accepted',
-          recipient: task.technician_email,
-          title: 'Maintenance Task Accepted',
-          message: `You have accepted maintenance task for ${task.category} at ${task.address}. Start date: ${task.start_date}`,
-          task_id: task.task_id
-        });
         if (task.resident_email) {
           notifications.push({
             type: 'task_accepted',
@@ -171,13 +157,6 @@ SchedulerModel.generateNotification = (type, data) => {
 
     case 'task_rejected':
       data.forEach(task => {
-        notifications.push({
-          type: 'task_rejected',
-          recipient: task.technician_email,
-          title: 'Maintenance Task Status',
-          message: `Maintenance task for ${task.category} at ${task.address} has been rejected.`,
-          task_id: task.task_id
-        });
         if (task.resident_email) {
           notifications.push({
             type: 'task_rejected',
@@ -200,19 +179,159 @@ SchedulerModel.generateNotification = (type, data) => {
       break;
 
     case 'status_changed':
-      data.forEach(task => {
-        console.log(`Notification: Status change for Task ${task.task_id}`);
-        console.log(`  Technician: ${task.technician_name} (${task.technician_email})`);
-        console.log(`  Resident: ${task.resident_name} (${task.resident_email})`);
-        console.log(`  Owner: ${task.owner_name} (${task.owner_email})`);
-        console.log(`  Location: ${task.address}`);
-        console.log(`  Category: ${task.category}`);
-        console.log(`  Description: ${task.description}`);
-      });
       break;
   }
 
   return notifications;
 };
 
-module.exports = SchedulerModel;
+/**
+ * Get notifications for a specific user
+ * Used for popup notifications in frontend
+ */
+SchedulerModel.getUserNotifications = async (userId) => {
+
+  const [tasks] = await db.query(
+
+    `SELECT
+      mt.task_id,
+      mt.status,
+      mt.category,
+      mt.description,
+      mt.start_date,
+      r.address
+    FROM MaintenanceTask mt
+    JOIN Residence r
+      ON mt.residence_id = r.residence_id
+    WHERE mt.tech_id = ?
+    AND mt.status IN (
+      'in_progress',
+      'completed',
+      'cancelled'
+    )
+    ORDER BY mt.task_id DESC`,
+    
+    [userId]
+  );
+
+  return tasks;
+};
+
+/**
+ * Create notification
+ */
+SchedulerModel.createNotification =
+  async (
+    userId,
+    title,
+    message,
+    description,
+    startDate,
+    endDate
+  ) => {
+
+    const sql = `
+      INSERT INTO Notifications (
+        user_id,
+        title,
+        message,
+        description,
+        start_date,
+        end_date
+      )
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    await db.execute(
+      sql,
+      [
+        userId,
+        title,
+        message,
+        description,
+        startDate,
+        endDate
+      ]
+    );
+};
+
+/**
+ * Get unread notifications
+ */
+SchedulerModel.getUnreadNotifications =
+  async (userId) => {
+
+    const sql = `
+      SELECT *
+      FROM Notifications
+      WHERE user_id = ?
+      AND is_read = FALSE
+      ORDER BY notification_id DESC
+    `;
+
+    const [rows] =
+      await db.execute(
+        sql,
+        [userId]
+      );
+
+    return rows;
+};
+
+/**
+ * Mark notification as read
+ */
+SchedulerModel.markAsRead =
+  async (notificationId) => {
+
+    const sql = `
+      UPDATE Notifications
+      SET is_read = TRUE
+      WHERE notification_id = ?
+    `;
+
+    await db.execute(
+      sql,
+      [notificationId]
+    );
+};
+
+// Delete notifications older than 5 days to prevent clutter
+SchedulerModel.deleteOldNotifications =
+  async () => {
+
+  await db.query(
+
+    `DELETE FROM Notifications
+     WHERE created_at <
+     NOW() - INTERVAL 5 DAY`
+  );
+};
+
+// Check if a notification already exists to prevent duplicates
+SchedulerModel.notificationExists =
+  async (
+    userId,
+    title,
+    startDate
+  ) => {
+
+  const [rows] = await db.query(
+
+    `SELECT notification_id
+     FROM Notifications
+     WHERE user_id = ?
+     AND title = ?
+     AND start_date = ?`,
+
+    [
+      userId,
+      title,
+      startDate
+    ]
+  );
+
+  return rows.length > 0;
+};
+
+ module.exports = SchedulerModel;

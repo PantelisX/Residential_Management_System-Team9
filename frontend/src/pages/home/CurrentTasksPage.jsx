@@ -142,7 +142,7 @@ const CurrentTasks = () => {
       )}
 
       {/* FOOTER SUMMARY */}
-      <Box mt={4} p={2} bgcolor="#f5f5f5" borderRadius={2}>
+      <Box sx ={{ mt: 4, p: 2, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
         <Typography variant="subtitle1" fontWeight="bold">
           Total number of tasks: {totalCount}
         </Typography>

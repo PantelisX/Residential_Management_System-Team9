@@ -77,8 +77,12 @@ const getTasks = async (req, res, next) => {
  */
 const getTechnicians = async (req, res, next) => {
   try {
-    const technicians = await userModel.getTechnicians();
+
+    const currentUserId = req.user.user_id;
+
+    const technicians = await userModel.getTechnicians(currentUserId);
     res.json(technicians);
+    
   } catch (error) {
     next(error);
   }

@@ -8,6 +8,11 @@ const AssignmentListController = {};
 
 AssignmentListController.getPendingAssignments = async (req, res) => {
   try {
+
+    if(!req.user.is_technician) {
+      return res.status(403).json({ error: 'Access denied. Only technicians can view pending assignments.' });
+    }
+
     const [tasks] = await db.query(
       `SELECT mt.task_id, mt.category, mt.description, mt.start_date, 
               t.user_id AS technician_id, t.name AS technician_name, t.email AS technician_email, t.phone AS technician_phone,
@@ -18,6 +23,7 @@ AssignmentListController.getPendingAssignments = async (req, res) => {
        WHERE mt.status =  'open'
        AND (mt.accepted = FALSE OR mt.status IS NULL)`
     );
+
     return res.status(200).json(tasks);
   } catch (error) {
     console.error('Error fetching pending assignments:', error);
@@ -139,7 +145,7 @@ AssignmentListController.updateTaskStatus = async (req, res) => {
     }
 
     const [tasks] = await db.query(
-      `SELECT mt.task_id, mt.status, mt.category, mt.description, mt.residence_id, 
+      `SELECT mt.task_id, mt.status, mt.category, mt.description, mt.residence_id,mt.start_date, mt.end_date, 
               r.address, r.owner, mt.tech_id, t.email AS technician_email, t.name AS technician_name, t.phone AS technician_phone,
               u2.email AS resident_email, u2.name AS resident_name,
               u3.email AS owner_email, u3.name AS owner_name
@@ -168,7 +174,7 @@ AssignmentListController.updateTaskStatus = async (req, res) => {
       [newStatus, task_id]
     );
 
-    schedulerModel.notifyStatusChange(task, oldStatus, newStatus);
+    await notificationController.notifyTaskStatusChange(task, oldStatus, newStatus);
 
     return res.status(200).json({ message: 'Task status updated', task: { task_id, newStatus } });
   } catch (error) {
@@ -176,5 +182,5 @@ AssignmentListController.updateTaskStatus = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
-
+ 
 module.exports = AssignmentListController;

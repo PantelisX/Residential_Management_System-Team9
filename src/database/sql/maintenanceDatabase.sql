@@ -67,3 +67,16 @@ CREATE TABLE UserResidence
 
     FOREIGN KEY (residence_id) REFERENCES Residence(residence_id) ON DELETE CASCADE
 );
+
+CREATE TABLE Notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    description TEXT,
+    start_date DATE,
+    end_date DATE,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);

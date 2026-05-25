@@ -8,6 +8,7 @@ const assignmentRoutes = require("./routes/assignmentRoutes");
 const tasksRoutes = require("./routes/tasksRoutes");
 const residenceRoutes = require("./routes/residenceRoutes");
 const maintenanceRoutes = require("./routes/maintenanceRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 const app = express();
 
@@ -33,6 +34,9 @@ app.use("/api/residences", residenceRoutes);
 
 // maintenance routes
 app.use("/api/maintenance", maintenanceRoutes);
+
+//notifications 
+app.use('/api/notifications',notificationRoutes);
 
 // port
 const PORT = process.env.PORT || 3001;
