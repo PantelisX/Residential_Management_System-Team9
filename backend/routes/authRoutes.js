@@ -29,5 +29,4 @@ router.put(
   updateProfile
 );
 
-console.log('AUTH ROUTES LOADED');
 module.exports = router;

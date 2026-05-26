@@ -121,11 +121,4 @@ async function login(req, res) {
   }
 }
   
-console.log({
-  register,
-  login,
-  getProfile,
-  updateProfile
-});
-
   module.exports = {register, login, getProfile, updateProfile};
