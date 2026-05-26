@@ -10,6 +10,15 @@ CREATE TABLE Residence
     description TEXT
 );
 
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(20),
+    password VARCHAR(255) NOT NULL,
+    is_technician BOOLEAN NOT NULL DEFAULT FALSE
+);
+
 
 CREATE TABLE MaintenanceTask (
     task_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -43,17 +52,6 @@ CREATE TABLE TaskHistory (
     completion_date DATE,
     FOREIGN KEY (task_id) REFERENCES MaintenanceTask(task_id)
 );
-
-
-CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    phone VARCHAR(20),
-    password VARCHAR(255) NOT NULL,
-    is_technician BOOLEAN NOT NULL DEFAULT FALSE
-);
-
 
 CREATE TABLE UserResidence 
 (
