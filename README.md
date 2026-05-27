@@ -23,7 +23,7 @@ Before running this project, make sure you have:
    DB_PASSWORD=
    DB_NAME=maintenance_system
    DB_PORT=3306
-   JWT_SECRET=kjh2387sdf87sdf98sdf\
+   JWT_SECRET=kjh2387sdf87sdf98sdf
    ```
 
 ## Installation & Run
