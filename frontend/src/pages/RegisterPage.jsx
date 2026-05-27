@@ -358,7 +358,7 @@ export default function RegisterPage() {
                     : ''
                 }`}
               >
-                • At least 8 characters
+                At least 8 characters
               </li>
 
               <li
@@ -370,8 +370,7 @@ export default function RegisterPage() {
                     : ''
                 }`}
               >
-                • One uppercase
-                letter
+                One uppercase letter
               </li>
 
               <li
@@ -383,7 +382,7 @@ export default function RegisterPage() {
                     : ''
                 }`}
               >
-                • One number
+                One number
               </li>
             </ul>
           </div>
