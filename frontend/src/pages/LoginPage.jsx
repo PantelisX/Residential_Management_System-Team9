@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import authService from '../services/authService';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -99,7 +99,7 @@ export default function LoginPage() {
       });
 
       navigate('/home');
-    } catch (err) {
+    } catch {
       setError(
         'Invalid email or password'
       );

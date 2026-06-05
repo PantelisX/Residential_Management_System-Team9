@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import assignmentApi from '../../services/assignmentApi';
 import './TaskModal.css';
 
@@ -7,6 +7,7 @@ function TaskModal({ task, isOpen, onClose, onRefresh }) {
 
   useEffect(() => {
     if (task) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStatus(task.status || 'open');
     }
   }, [task]);

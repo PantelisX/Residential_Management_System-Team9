@@ -1,6 +1,7 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { getToken } from '../utils/tokenStorage';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -15,10 +16,10 @@ export const AuthProvider = ({ children }) => {
 
     const savedUser = localStorage.getItem('user');
     if (savedToken && savedUser) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setToken(savedToken);
       setIsAuthenticated(true);
       setUser(JSON.parse(savedUser));
-      // TODO: Fetch user data from API using the token
     }
     setLoading(false);
   }, []);

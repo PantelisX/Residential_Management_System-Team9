@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../services/api';
 import '../styles/AssignmentPage.css';
 
@@ -50,8 +50,9 @@ function AssignmentsPage() {
    */
   useEffect(() => {
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshData();
-
+  
   }, []);
 
   /**

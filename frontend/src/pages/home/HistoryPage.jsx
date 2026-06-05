@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import maintenanceService from '../../services/maintenanceService';
 
 import {
   Box,
   Grid,
   Card,
-  CardContent,
   Typography,
   Select,
   MenuItem,

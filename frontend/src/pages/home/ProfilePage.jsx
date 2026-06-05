@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import userService from '../../services/userService';
@@ -28,11 +28,6 @@ const ProfilePage = () => {
     phone: ''
   });
 
-  // Fetch user profile on component mount
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
@@ -50,6 +45,12 @@ const ProfilePage = () => {
       setLoading(false);
     }
   };
+
+  // Fetch user profile on component mount
+useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  fetchUserProfile();
+}, []);
 
   /**
    * Start editing a field

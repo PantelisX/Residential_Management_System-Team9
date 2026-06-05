@@ -58,8 +58,11 @@ function ResidencesPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchResidences();
     fetchTechnicians();
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddResidence = async () => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import assignmentApi from '../../services/assignmentApi';
 import './PendingAssignments.css';
 
