@@ -1,0 +1,37 @@
+name: Node.js CI Pipeline
+
+# Το pipeline θα τρέχει σε κάθε push ή pull request στο main branch
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test-backend:
+    name: Run Backend Tests
+    runs-on: ubuntu-latest
+
+    # Επειδή το project σου έχει φάκελο backend, λέμε στο GitHub να μπει εκεί
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+    # 1. Κατεβάζει τον κώδικά σου στον server του GitHub
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # 2. Στήνει το περιβάλλον Node.js
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x' # Μπορείς να βάλεις την έκδοση που χρησιμοποιείς
+
+    # 3. Εγκαθιστά τα dependencies (Express, Jest, κλπ)
+    - name: Install Dependencies
+      run: npm install
+
+    # 4. Τρέχει τα αυτοματοποιημένα tests σου
+    - name: Run Tests
+      run: npm run test
