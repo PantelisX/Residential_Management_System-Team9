@@ -3,21 +3,21 @@ const app = require('../server');
 
 describe('Tasks API Endpoints', () => {
   
-  // 1. Αρνητικό Σενάριο (Χωρίς Authentication)
-  it('GET /api/tasks/current χωρίς token πρέπει να επιστρέφει 401 (ή 403)', async () => {
-    // Στέλνουμε αίτημα στο σωστό route χωρίς token
+  // 1. Negative Scenario (Without Authentication)
+  it('GET /api/tasks/current without token should return 401 (or 403)', async () => {
+    // Send a request to the correct route without a token
     const res = await request(app).get('/api/tasks/current'); 
     
-    // Το authMiddleware πρέπει να μπλοκάρει την κλήση
+    // The authMiddleware should block the call
     expect(res.statusCode).toBe(401); 
   });
 
-  // 2. Θετικό Σενάριο (Αναγνώριση του route)
-  it('Θα πρέπει να αναγνωρίζει το endpoint GET /api/tasks/current', async () => {
+  // 2. Positive Scenario (Route recognition)
+  it('Should recognize the GET /api/tasks/current endpoint', async () => {
     const res = await request(app).get('/api/tasks/current');
     
-    // Εφόσον το route υπάρχει, δεν πρέπει να γυρίσει 404 Not Found.
-    // (Θα γυρίσει 401 λόγω έλλειψης token, το οποίο σημαίνει ότι βρήκε το route!)
+    // Since the route exists, it shouldn't return 404 Not Found.
+    // (It will return 401 due to missing token, which means it found the route!)
     expect(res.statusCode).not.toBe(404);
   });
 
