@@ -41,7 +41,12 @@ app.use('/api/notifications',notificationRoutes);
 // port
 const PORT = process.env.PORT || 3001;
 
-// start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// start server(Only when not running in test mode)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export the app for testing
+module.exports = app;;

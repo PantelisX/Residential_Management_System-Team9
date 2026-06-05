@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
+    "test": "jest --detectOpenHandles --forceExit",
     "dev": "nodemon server.js"
   },
   "keywords": [],
@@ -19,5 +20,9 @@
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.22.3",
     "nodemon": "^3.1.14"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2"
   }
 }
