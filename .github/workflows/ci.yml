@@ -28,6 +28,11 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
-    # 4. Run the automated tests
+    # 4. Run Linting   
+    - name: Run Lint
+      run: npm run lint 
+
+    # 5. Run the automated tests
     - name: Run Tests
       run: npm run test
+    
