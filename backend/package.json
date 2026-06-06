@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "test": "jest --detectOpenHandles --forceExit",
-    "dev": "nodemon server.js",
-    "lint": "eslint ."
+    "dev": "nodemon server.js"
+    
   },
   "keywords": [],
   "author": "",
