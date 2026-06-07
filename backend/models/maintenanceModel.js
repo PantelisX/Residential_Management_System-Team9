@@ -36,7 +36,7 @@ const createTask = async (taskData) => {
     const [result] = await db.execute(sql, params);
     return result;
   } catch (error) {
-    throw new Error('Failed to create maintenance task: ' + error.message);
+    throw new Error('Failed to create maintenance task: ' + error.message, { cause: error });
   }
 };
 
