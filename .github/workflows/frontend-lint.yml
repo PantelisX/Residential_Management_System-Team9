@@ -8,10 +8,10 @@ jobs:
     name: Run Backend Tests
     runs-on: ubuntu-latest
 
-    # Since the project has a backend folder, we set it as the working directory
+    # Since the project has a frontend folder, we set it as the working directory
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./frontend
 
     steps:
     # 1. Checkout the code to the GitHub runner
