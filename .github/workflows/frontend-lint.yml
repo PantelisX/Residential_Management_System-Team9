@@ -1,6 +1,6 @@
 name: ESLint Frontend CI
 
-# The pipeline will run on every push or pull request to the main branch
+# The pipelie will run on every push or pull request to the main branch
 on: [push, pull_request]
 
 jobs:

@@ -1,13 +1,14 @@
 name: ESLint Backend CI
 
+# The pipeline will run on every push or pull request to the main branch
 on: [push, pull_request]
 
 jobs:
-  backend-lint:
+  frontend-lint:
     name: Backend Linting
-
     runs-on: ubuntu-latest
 
+    # Set the backend as the working directory
     defaults:
       run:
         working-directory: ./backend
@@ -17,14 +18,20 @@ jobs:
         node-version: ['20.x', '22.x', '24.x']
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js
-      uses: actions/setup-node@v4
+    # 1. Checkout the code to the GitHub runner
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # 2. Setup the Node.js environment
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ matrix.node-version }} # Specify the Node.js version you are using
 
+    # 3. Install dependencies (Express, Jest, etc.)
     - name: Install Dependencies
-      run: npm install
+      run: npm ci
 
+    # 4. Run Linting   
     - name: Run Lint
-      run: npm run lint
+      run: npm run lint 
