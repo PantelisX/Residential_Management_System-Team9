@@ -1,0 +1,28 @@
+name: Backend Automated Tests CI
+
+on: [push, pull_request]
+
+jobs:
+  backend-test:
+    name: Backend Testing
+    runs-on: ubuntu-latest
+
+    # Θέτουμε ως φάκελο εργασίας το backend, αφού εκεί βρίσκονται τα τεστ
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Run Tests
+      run: npm run test
