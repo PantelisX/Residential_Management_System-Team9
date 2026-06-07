@@ -1,4 +1,4 @@
-name: Node.js CI Pipeline
+name: ESLint CI Pipeline
 
 # The pipeline will run on every push or pull request to the main branch
 on: [push, pull_request]
