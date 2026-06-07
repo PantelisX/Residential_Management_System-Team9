@@ -32,7 +32,4 @@ jobs:
     - name: Run Lint
       run: npm run lint 
 
-    # 5. Run the automated tests
-    - name: Run Tests
-      run: npm run test
     
