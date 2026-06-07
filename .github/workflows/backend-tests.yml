@@ -5,9 +5,9 @@ on: [push, pull_request]
 jobs:
   backend-test:
     name: Backend Testing
+
     runs-on: ubuntu-latest
 
-    # Θέτουμε ως φάκελο εργασίας το backend, αφού εκεί βρίσκονται τα τεστ
     defaults:
       run:
         working-directory: ./backend
