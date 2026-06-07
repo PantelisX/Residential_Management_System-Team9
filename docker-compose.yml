@@ -1,0 +1,47 @@
+services:
+  # 1. Container για τη Βάση Δεδομένων MySQL
+  db:
+    image: mysql:8.0
+    container_name: maintenance_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: maintenance_system
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      # ΕΔΩ ΜΠΗΚΕ Η ΓΡΑΜΜΗ ΓΙΑ ΤΟ SQL ΑΡΧΕΙΟ (χωρίς το # μπροστά):
+      - ./src/database/sql/maintenanceDatabase.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # 2. Container για το Backend
+  backend:
+    build: ./backend
+    container_name: maintenance_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      PORT:
+      DB_HOST: db 
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: maintenance_system
+      DB_PORT: 3306
+      JWT_SECRET: kjh2387sdf87sdf98sdf
+    depends_on:
+      - db
+
+  # 3. Container για το Frontend
+  frontend:
+    build: ./frontend
+    container_name: maintenance_frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+# Ορισμός του volume για τη βάση δεδομένων στο τέλος
+volumes:
+  db_data:
