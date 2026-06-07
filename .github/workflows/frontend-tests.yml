@@ -1,0 +1,21 @@
+name: Frontend Automated Tests CI
+
+on: [push, pull_request]
+
+jobs:
+  frontend-test:
+    name: Frontend Testing
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22.x'
+    - name: Install Dependencies
+      run: npm install --legacy-peer-deps
+    - name: Run Tests
+      run: npm run test

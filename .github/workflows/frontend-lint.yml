@@ -30,9 +30,9 @@ jobs:
 
     # 3. Install dependencies (Express, Jest, etc.)
     - name: Install Dependencies
-      run: npm ci
+      run: npm install --legacy-peer-deps
 
-    # 4. Run Linting   
+    # 4. Run Linting
     - name: Run Lint
       run: npm run lint 
 
