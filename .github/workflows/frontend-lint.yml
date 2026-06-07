@@ -32,7 +32,7 @@ jobs:
     - name: Install Dependencies
       run: npm install --legacy-peer-deps
 
-    # 4. Run Linting   
+    # 4. Run Lintin
     - name: Run Lint
       run: npm run lint 
 
