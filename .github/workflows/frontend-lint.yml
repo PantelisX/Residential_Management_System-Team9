@@ -1,11 +1,11 @@
-name: ESLint CI Pipeline
+name: ESLint Frontend CI
 
 # The pipeline will run on every push or pull request to the main branch
 on: [push, pull_request]
 
 jobs:
-  test-backend:
-    name: Run Backend Tests
+  frontend-lint:
+    name: Frontend Linting
     runs-on: ubuntu-latest
 
     # Since the project has a frontend folder, we set it as the working directory
