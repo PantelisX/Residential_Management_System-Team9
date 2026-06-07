@@ -26,3 +26,19 @@ jobs:
 
     - name: Run Tests
       run: npm run test
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: backend-test-results
+    
+    - name: Upload Coverage Report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: backend-coverage-report
+    
+    - name: Notify on Failure
+      if: failure()
+      run: echo "Backend tests failed. Please check the logs and test results for details."
