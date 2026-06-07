@@ -1,4 +1,5 @@
-CREATE DATABASE maintenance_system;
+CREATE DATABASE IF NOT EXISTS maintenance_system;
+
 USE maintenance_system;
 
 
