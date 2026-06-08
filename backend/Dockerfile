@@ -1,5 +1,5 @@
 # Χρήση του Node.js (έκδοση 18 alpine για μικρότερο μέγεθος)
-FROM node:18-alpine
+FROM node:22-alpine
 
 # Ορίζουμε τον φάκελο εργασίας στο container
 WORKDIR /app
