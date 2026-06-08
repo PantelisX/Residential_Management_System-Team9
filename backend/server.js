@@ -1,14 +1,14 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-require("./config/db");
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+require('./config/db');
 
-const authRoutes = require("./routes/authRoutes");
-const assignmentRoutes = require("./routes/assignmentRoutes");
-const tasksRoutes = require("./routes/tasksRoutes");
-const residenceRoutes = require("./routes/residenceRoutes");
-const maintenanceRoutes = require("./routes/maintenanceRoutes");
-const notificationRoutes = require("./routes/notificationRoutes");
+const authRoutes = require('./routes/authRoutes');
+const assignmentRoutes = require('./routes/assignmentRoutes');
+const tasksRoutes = require('./routes/tasksRoutes');
+const residenceRoutes = require('./routes/residenceRoutes');
+const maintenanceRoutes = require('./routes/maintenanceRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 const app = express();
 
@@ -17,26 +17,26 @@ app.use(cors());
 app.use(express.json());
 
 // test route
-app.get("/", (req, res) => {
-  res.send("Backend is running!");
+app.get('/', (req, res) => {
+  res.send('Backend is running!');
 });
 
 // auth routes
-app.use("/api/auth", authRoutes);
+app.use('/api/auth', authRoutes);
 
 // assignment routes
-app.use("/api/assignments", assignmentRoutes);
+app.use('/api/assignments', assignmentRoutes);
 //Curr task
-app.use("/api/tasks", tasksRoutes);
+app.use('/api/tasks', tasksRoutes);
 
 // residence routes
-app.use("/api/residences", residenceRoutes);
+app.use('/api/residences', residenceRoutes);
 
 // maintenance routes
-app.use("/api/maintenance", maintenanceRoutes);
+app.use('/api/maintenance', maintenanceRoutes);
 
-//notifications 
-app.use('/api/notifications',notificationRoutes);
+//notifications
+app.use('/api/notifications', notificationRoutes);
 
 // port
 const PORT = process.env.PORT || 3001;
@@ -49,4 +49,4 @@ if (require.main === module) {
 }
 
 // Export the app for testing
-module.exports = app;;
+module.exports = app;

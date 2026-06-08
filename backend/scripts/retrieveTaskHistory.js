@@ -66,7 +66,7 @@ const main = async () => {
   try {
     const userId = process.argv[2] ? parseInt(process.argv[2]) : null;
     const residenceId = process.argv[3] ? parseInt(process.argv[3]) : null;
-    
+
     const data = await getTaskHistory(userId, residenceId);
 
     if (data.length === 0) {
@@ -78,9 +78,9 @@ const main = async () => {
     console.table(data);
 
     // Print summary statistics
-    const completed = data.filter(t => t.status === 'completed').length;
-    const cancelled = data.filter(t => t.status === 'cancelled').length;
-    
+    const completed = data.filter((t) => t.status === 'completed').length;
+    const cancelled = data.filter((t) => t.status === 'cancelled').length;
+
     console.log('\n=== Summary ===');
     console.log(`Total Tasks: ${data.length}`);
     console.log(`Completed: ${completed}`);

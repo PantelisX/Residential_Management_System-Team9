@@ -8,9 +8,13 @@ const AssignmentListController = {};
 
 AssignmentListController.getPendingAssignments = async (req, res) => {
   try {
-
-    if(!req.user.is_technician) {
-      return res.status(403).json({ error: 'Access denied. Only technicians can view pending assignments.' });
+    if (!req.user.is_technician) {
+      return res
+        .status(403)
+        .json({
+          error:
+            'Access denied. Only technicians can view pending assignments.',
+        });
     }
 
     const [tasks] = await db.query(
@@ -34,7 +38,7 @@ AssignmentListController.getPendingAssignments = async (req, res) => {
 AssignmentListController.acceptAssignment = async (req, res) => {
   try {
     const { task_id } = req.body;
-    
+
     if (!task_id) {
       return res.status(400).json({ error: 'task_id is required' });
     }
@@ -78,8 +82,8 @@ AssignmentListController.acceptAssignment = async (req, res) => {
 
 AssignmentListController.declineAssignment = async (req, res) => {
   try {
-    const {task_id} = req.body;
-    
+    const { task_id } = req.body;
+
     if (!task_id) {
       return res.status(400).json({ error: 'task_id is required' });
     }
@@ -136,12 +140,19 @@ AssignmentListController.updateTaskStatus = async (req, res) => {
     const { task_id, newStatus } = req.body;
 
     if (!task_id || !newStatus) {
-      return res.status(400).json({ error: 'task_id and newStatus are required' });
+      return res
+        .status(400)
+        .json({ error: 'task_id and newStatus are required' });
     }
 
     const validStatuses = ['open', 'in_progress', 'completed', 'cancelled'];
     if (!validStatuses.includes(newStatus)) {
-      return res.status(400).json({ error: 'Invalid status value. Must be open, in_progress, completed, or cancelled' });
+      return res
+        .status(400)
+        .json({
+          error:
+            'Invalid status value. Must be open, in_progress, completed, or cancelled',
+        });
     }
 
     const [tasks] = await db.query(
@@ -174,13 +185,19 @@ AssignmentListController.updateTaskStatus = async (req, res) => {
       [newStatus, task_id]
     );
 
-    await notificationController.notifyTaskStatusChange(task, oldStatus, newStatus);
+    await notificationController.notifyTaskStatusChange(
+      task,
+      oldStatus,
+      newStatus
+    );
 
-    return res.status(200).json({ message: 'Task status updated', task: { task_id, newStatus } });
+    return res
+      .status(200)
+      .json({ message: 'Task status updated', task: { task_id, newStatus } });
   } catch (error) {
     console.error('Error updating task status:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
- 
+
 module.exports = AssignmentListController;

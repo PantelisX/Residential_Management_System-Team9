@@ -34,7 +34,7 @@ exports.getCurrentTasks = async (req, res) => {
     }
 
     const [rows] = await db.query(query, queryParams);
-    
+
     // Get total count for filtered tasks
     const [totalCountResult] = await db.query(
       `SELECT COUNT(*) AS total FROM (
@@ -48,13 +48,13 @@ exports.getCurrentTasks = async (req, res) => {
     res.json({
       tasks: rows,
       totalCount,
-      success: true
+      success: true,
     });
   } catch (error) {
     console.error('Error fetching current tasks:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch tasks'
+      error: 'Failed to fetch tasks',
     });
   }
 };
@@ -91,13 +91,13 @@ exports.getHistoryTasks = async (req, res) => {
     res.json({
       tasks: rows,
       totalCount: rows.length,
-      success: true
+      success: true,
     });
   } catch (error) {
     console.error('Error fetching history tasks:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch history tasks'
+      error: 'Failed to fetch history tasks',
     });
   }
 };

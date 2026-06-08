@@ -9,15 +9,12 @@ const userModel = require('../models/userModel');
  * Sends upcoming task reminders for tasks scheduled in 1 month
  */
 const sendUpcomingMonthNotifications = async () => {
+  const tasks = await schedulerModel.getUpcomingTasksByOneMonth();
 
-  const tasks =
-    await schedulerModel.getUpcomingTasksByOneMonth();
-
-  const notifications =
-    schedulerModel.generateNotification(
-      'upcoming_1_month',
-      tasks
-    );
+  const notifications = schedulerModel.generateNotification(
+    'upcoming_1_month',
+    tasks
+  );
 
   return notifications;
 };
@@ -26,15 +23,12 @@ const sendUpcomingMonthNotifications = async () => {
  * Sends upcoming task reminders for tasks scheduled in 1 day
  */
 const sendUpcomingDayNotifications = async () => {
+  const tasks = await schedulerModel.getUpcomingTasksByOneDay();
 
-  const tasks =
-    await schedulerModel.getUpcomingTasksByOneDay();
-
-  const notifications =
-    schedulerModel.generateNotification(
-      'upcoming_1_day',
-      tasks
-    );
+  const notifications = schedulerModel.generateNotification(
+    'upcoming_1_day',
+    tasks
+  );
 
   return notifications;
 };
@@ -43,19 +37,14 @@ const sendUpcomingDayNotifications = async () => {
  * Generates notification when a task is accepted
  */
 const notifyTaskAccepted = async (task) => {
-
-  const notifications =
-    schedulerModel.generateNotification(
-      'task_accepted',
-      [task]
-    );
+  const notifications = schedulerModel.generateNotification('task_accepted', [
+    task,
+  ]);
 
   for (const notification of notifications) {
-
     const technician = await userModel.getUserByEmail(notification.recipient);
 
-      if (technician) {
-
+    if (technician) {
       await schedulerModel.createNotification(
         technician.user_id,
         notification.title,
@@ -74,12 +63,9 @@ const notifyTaskAccepted = async (task) => {
  * Generates notification when a task is rejected
  */
 const notifyTaskRejected = async (task) => {
-
-  const notifications =
-    schedulerModel.generateNotification(
-      'task_rejected',
-      [task]
-    );
+  const notifications = schedulerModel.generateNotification('task_rejected', [
+    task,
+  ]);
 
   return notifications;
 };
@@ -87,83 +73,62 @@ const notifyTaskRejected = async (task) => {
 /**
  * Handles task status change notifications
  */
-const notifyTaskStatusChange = async (
-  task,
-  oldStatus,
-  newStatus
-) => {
-
+const notifyTaskStatusChange = async (task, oldStatus, newStatus) => {
   console.log(task);
 
   /**
- * Notify resident
- */
-if (task.resident_email) {
+   * Notify resident
+   */
+  if (task.resident_email) {
+    const resident = await userModel.getUserByEmail(task.resident_email);
 
-  const resident =
-    await userModel.getUserByEmail(
-      task.resident_email
-    );
+    if (resident) {
+      await schedulerModel.createNotification(
+        resident.user_id,
 
-  if (resident) {
+        'Maintenance Update',
 
-    await schedulerModel.createNotification(
-
-      resident.user_id,
-
-      'Maintenance Update',
-
-      `The ${task.category} task at
+        `The ${task.category} task at
        ${task.address}
        changed from ${oldStatus}
        to ${newStatus}.`,
 
-      task.description,
+        task.description,
 
-      task.start_date,
+        task.start_date,
 
-      task.end_date || null
-    );
+        task.end_date || null
+      );
+    }
   }
-}
 
-/**
- * Notify owner
- */
-if (task.owner_email) {
+  /**
+   * Notify owner
+   */
+  if (task.owner_email) {
+    const owner = await userModel.getUserByEmail(task.owner_email);
 
-  const owner =
-    await userModel.getUserByEmail(
-      task.owner_email
-    );
+    if (owner) {
+      await schedulerModel.createNotification(
+        owner.user_id,
 
-  if (owner) {
+        'Maintenance Update',
 
-    await schedulerModel.createNotification(
-
-      owner.user_id,
-
-      'Maintenance Update',
-
-      `The ${task.category} task at
+        `The ${task.category} task at
        ${task.address}
        changed from ${oldStatus}
        to ${newStatus}.`,
 
-      task.description,
+        task.description,
 
-      task.start_date,
+        task.start_date,
 
-      task.end_date || null
-    );
+        task.end_date || null
+      );
+    }
   }
-}
 
-  return schedulerModel.notifyStatusChange(
-    task,
-    oldStatus,
-    newStatus
-  );
+  return schedulerModel.notifyStatusChange(task, oldStatus, newStatus);
 };
 
 /**
@@ -173,106 +138,86 @@ if (task.owner_email) {
  * Get unread notifications
  */
 const getNotifications = async (req, res) => {
-
   try {
     const userId = req.user.user_id;
     /**
- * Create 1 day reminders
- */
-const upcomingDayTasks =
-  await schedulerModel.getUpcomingTasksByOneDay();
+     * Create 1 day reminders
+     */
+    const upcomingDayTasks = await schedulerModel.getUpcomingTasksByOneDay();
 
-for (const task of upcomingDayTasks) {
-
-  if (
-    task.resident_email === req.user.email
-  ) {
-
-    const message =
-      `Reminder:
+    for (const task of upcomingDayTasks) {
+      if (task.resident_email === req.user.email) {
+        const message = `Reminder:
        maintenance task starts tomorrow
        at ${task.address}.`;
 
-    const exists =
-      await schedulerModel.notificationExists(
-        userId,
-        'Upcoming Maintenance Reminder',
-        task.start_date
-      );
+        const exists = await schedulerModel.notificationExists(
+          userId,
+          'Upcoming Maintenance Reminder',
+          task.start_date
+        );
 
-    if (!exists) {
+        if (!exists) {
+          await schedulerModel.createNotification(
+            userId,
 
-      await schedulerModel.createNotification(
+            'Upcoming Maintenance Reminder',
 
-        userId,
+            message,
 
-        'Upcoming Maintenance Reminder',
+            task.description || null,
 
-        message,
+            task.start_date || null,
 
-        task.description || null,
-
-        task.start_date || null,
-
-        task.end_date || null
-      );
+            task.end_date || null
+          );
+        }
+      }
     }
-  }
-}
 
-/**
- * Create 1 month reminders
- */
-const upcomingMonthTasks =
-  await schedulerModel.getUpcomingTasksByOneMonth();
+    /**
+     * Create 1 month reminders
+     */
+    const upcomingMonthTasks =
+      await schedulerModel.getUpcomingTasksByOneMonth();
 
-for (const task of upcomingMonthTasks) {
-
-  if (
-    task.resident_email === req.user.email
-  ) {
-
-    const message =
-      `Reminder:
+    for (const task of upcomingMonthTasks) {
+      if (task.resident_email === req.user.email) {
+        const message = `Reminder:
        maintenance task scheduled
        in one month
        at ${task.address}.`;
 
-    const exists =
-      await schedulerModel.notificationExists(
-        userId,
-        'Future Maintenance Reminder',
-        task.start_date
-      );
+        const exists = await schedulerModel.notificationExists(
+          userId,
+          'Future Maintenance Reminder',
+          task.start_date
+        );
 
-    if (!exists) {
+        if (!exists) {
+          await schedulerModel.createNotification(
+            userId,
 
-      await schedulerModel.createNotification(
+            'Future Maintenance Reminder',
 
-        userId,
+            message,
 
-        'Future Maintenance Reminder',
+            task.description || null,
 
-        message,
+            task.start_date || null,
 
-        task.description || null,
-
-        task.start_date || null,
-
-        task.end_date || null
-      );
+            task.end_date || null
+          );
+        }
+      }
     }
-  } 
-}
 
-  const notifications = await schedulerModel.getUnreadNotifications(userId);
-  res.json({ notifications});
-
+    const notifications = await schedulerModel.getUnreadNotifications(userId);
+    res.json({ notifications });
   } catch (error) {
-
     res.status(500).json({
       message: 'Server error',
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -280,32 +225,21 @@ for (const task of upcomingMonthTasks) {
 /**
  * Mark notification as read
  */
-const markNotificationAsRead =
-  async (req, res) => {
+const markNotificationAsRead = async (req, res) => {
+  try {
+    const { notificationId } = req.params;
 
-    try {
+    await schedulerModel.markAsRead(notificationId);
 
-      const {
-        notificationId
-      } = req.params;
-
-      await schedulerModel
-        .markAsRead(
-          notificationId
-        );
-
-      res.json({
-        message:
-          'Notification marked as read'
-      });
-
-    } catch (error) {
-
-      res.status(500).json({
-        message: 'Server error',
-        error: error.message
-      });
-    }
+    res.json({
+      message: 'Notification marked as read',
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Server error',
+      error: error.message,
+    });
+  }
 };
 
 module.exports = {
@@ -315,5 +249,5 @@ module.exports = {
   notifyTaskRejected,
   notifyTaskStatusChange,
   getNotifications,
-  markNotificationAsRead
+  markNotificationAsRead,
 };

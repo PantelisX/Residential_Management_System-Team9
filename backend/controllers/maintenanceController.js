@@ -10,40 +10,42 @@ const userModel = require('../models/userModel');
  */
 const createTask = async (req, res, next) => {
   try {
-    const { residence_id, category, description, start_date, tech_id } = req.body;
-    
+    const { residence_id, category, description, start_date, tech_id } =
+      req.body;
+
     const userId = req.user.user_id;
-    
+
     if (!residence_id || !category || !description || !start_date || !tech_id) {
-      return res.status(400).json({ 
-        error: 'All fields (residence_id, category, description, start_date, tech_id) are required' 
+      return res.status(400).json({
+        error:
+          'All fields (residence_id, category, description, start_date, tech_id) are required',
       });
     }
 
     const hasAccess = await maintenanceModel.checkAccess(userId, residence_id);
     if (!hasAccess) {
-      return res.status(403).json({ 
-        error: 'Access denied: You do not have permission to create tasks for this residence.' 
+      return res.status(403).json({
+        error:
+          'Access denied: You do not have permission to create tasks for this residence.',
       });
     }
-    
+
     const result = await maintenanceModel.createTask({
       residence_id,
       category,
       description,
       start_date,
-      tech_id
+      tech_id,
     });
 
-    res.status(201).json({ 
+    res.status(201).json({
       message: 'Task created successfully',
-      taskId: result.insertId 
+      taskId: result.insertId,
     });
   } catch (error) {
     next(error);
   }
 };
-
 
 /**
  * Get all maintenance tasks for the authenticated user
@@ -52,19 +54,15 @@ const createTask = async (req, res, next) => {
  * @param {Function} next - Next middleware function
  */
 const getTasks = async (req, res, next) => {
-
   try {
-
     const userId = req.user.user_id;
 
     const tasks = await maintenanceModel.getTasks(userId);
 
     res.json({
-      tasks
+      tasks,
     });
-
   } catch (error) {
-
     next(error);
   }
 };
@@ -77,12 +75,10 @@ const getTasks = async (req, res, next) => {
  */
 const getTechnicians = async (req, res, next) => {
   try {
-
     const currentUserId = req.user.user_id;
 
     const technicians = await userModel.getTechnicians(currentUserId);
     res.json(technicians);
-    
   } catch (error) {
     next(error);
   }
@@ -91,5 +87,5 @@ const getTechnicians = async (req, res, next) => {
 module.exports = {
   createTask,
   getTasks,
-  getTechnicians
+  getTechnicians,
 };

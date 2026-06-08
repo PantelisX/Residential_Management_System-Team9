@@ -15,12 +15,12 @@ async function getResidencesForUser(req, res) {
 
     res.status(200).json({
       message: 'Residences fetched successfully',
-      residences: residences
+      residences: residences,
     });
   } catch (err) {
     res.status(500).json({
       message: 'Server error',
-      error: err.message
+      error: err.message,
     });
   }
 }
@@ -29,10 +29,7 @@ async function createResidence(req, res) {
   try {
     const userId = req.user.user_id;
 
-    const {
-      address,
-      description
-    } = req.body;
+    const { address, description } = req.body;
 
     const residenceId = await residenceModel.createResidence(
       userId,
@@ -42,20 +39,19 @@ async function createResidence(req, res) {
 
     res.status(201).json({
       message: 'Residence created successfully',
-      residence_id: residenceId
+      residence_id: residenceId,
     });
-
   } catch (err) {
     console.error(err);
 
     res.status(500).json({
       message: 'Server error',
-      error: err.message
+      error: err.message,
     });
   }
 }
 
 module.exports = {
   getResidencesForUser,
-  createResidence
+  createResidence,
 };

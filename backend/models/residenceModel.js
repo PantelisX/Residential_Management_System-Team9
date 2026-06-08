@@ -22,23 +22,18 @@ async function getUserResidences(userId) {
     GROUP BY r.residence_id, r.address, r.description, r.owner, ur.user_role
     ORDER BY r.address ASC
   `;
-  
+
   const [rows] = await db.query(sql, [userId]);
   return rows;
 }
 
-async function createResidence(
-  userId,
-  address,
-  description
-) {
-
+async function createResidence(userId, address, description) {
   /**
    * Insert residence
    */
   const sql = `INSERT INTO Residence (address,description) VALUES (?, ?)`;
 
-  const [result] = await db.execute( sql,[address,description]);
+  const [result] = await db.execute(sql, [address, description]);
 
   /**
    * Get new residence id
@@ -49,9 +44,9 @@ async function createResidence(
    * Connect user with residence
    */
   await db.execute(
-
     `INSERT INTO UserResidence (user_id,residence_id)
-     VALUES (?, ?)`,[userId,residenceId]
+     VALUES (?, ?)`,
+    [userId, residenceId]
   );
 
   return residenceId;
@@ -59,5 +54,5 @@ async function createResidence(
 
 module.exports = {
   getUserResidences,
-  createResidence
+  createResidence,
 };

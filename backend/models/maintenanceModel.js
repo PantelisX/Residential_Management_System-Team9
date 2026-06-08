@@ -23,20 +23,22 @@ const createTask = async (taskData) => {
       tech_id
     ) VALUES (?, ?, ?, ?, 'open', FALSE, ?)
   `;
-  
+
   const params = [
     taskData.residence_id,
     taskData.category,
     taskData.description,
     taskData.start_date,
-    taskData.tech_id
+    taskData.tech_id,
   ];
-  
+
   try {
     const [result] = await db.execute(sql, params);
     return result;
   } catch (error) {
-    throw new Error('Failed to create maintenance task: ' + error.message, { cause: error });
+    throw new Error('Failed to create maintenance task: ' + error.message, {
+      cause: error,
+    });
   }
 };
 
@@ -46,7 +48,6 @@ const createTask = async (taskData) => {
  * @returns {Promise<Array>} Array of maintenance tasks
  */
 const getTasks = async (userId) => {
-
   const sql = `
     SELECT
       mt.task_id,
@@ -73,5 +74,5 @@ const getTasks = async (userId) => {
 module.exports = {
   checkAccess,
   createTask,
-  getTasks
+  getTasks,
 };

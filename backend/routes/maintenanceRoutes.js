@@ -9,6 +9,10 @@ router.post('/tasks', authMiddleware, maintenanceController.createTask);
 
 router.get('/tasks', authMiddleware, maintenanceController.getTasks);
 
-router.get('/technicians', authMiddleware, maintenanceController.getTechnicians);
+router.get(
+  '/technicians',
+  authMiddleware,
+  maintenanceController.getTechnicians
+);
 
 module.exports = router;

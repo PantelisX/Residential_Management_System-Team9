@@ -11,11 +11,9 @@ async function findUserByEmail(email) {
  * Get user by email
  */
 async function getUserByEmail(email) {
-
   const sql = 'SELECT user_id FROM users WHERE email = ? LIMIT 1';
-    
-  const [rows] = 
-    await db.execute( sql,[email]);
+
+  const [rows] = await db.execute(sql, [email]);
 
   return rows[0] || null;
 }
@@ -33,7 +31,7 @@ async function createUser(user) {
     user.email,
     user.phone,
     user.password,
-    user.is_technician
+    user.is_technician,
   ];
 
   const [result] = await db.execute(sql, params);
@@ -45,11 +43,12 @@ const getTechnicians = async (excludeUserId) => {
   const sql = `SELECT user_id, name FROM users WHERE is_technician = 1 AND user_id != ?`;
   const [rows] = await db.query(sql, [excludeUserId]);
   return rows;
-}
+};
 
 // Get a user by ID
 async function getUserById(userId) {
-  const sql = 'SELECT user_id, name, email, phone, is_technician FROM users WHERE user_id = ? LIMIT 1';
+  const sql =
+    'SELECT user_id, name, email, phone, is_technician FROM users WHERE user_id = ? LIMIT 1';
   const [rows] = await db.query(sql, [userId]);
   return rows[0] || null;
 }
@@ -70,5 +69,5 @@ module.exports = {
   getTechnicians,
   getUserById,
   updateUserProfile,
-  getUserByEmail
+  getUserByEmail,
 };

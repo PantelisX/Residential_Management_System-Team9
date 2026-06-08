@@ -6,14 +6,34 @@ const AssignmentListController = require('../controllers/assignmentListControlle
 
 const authMiddleware = require('../middlewares/authMiddleware');
 
-router.get('/pending', authMiddleware, AssignmentListController.getPendingAssignments);
+router.get(
+  '/pending',
+  authMiddleware,
+  AssignmentListController.getPendingAssignments
+);
 
-router.post('/accept', authMiddleware, AssignmentListController.acceptAssignment);
+router.post(
+  '/accept',
+  authMiddleware,
+  AssignmentListController.acceptAssignment
+);
 
-router.post('/decline', authMiddleware, AssignmentListController.declineAssignment);
+router.post(
+  '/decline',
+  authMiddleware,
+  AssignmentListController.declineAssignment
+);
 
-router.get('/accepted', authMiddleware, AssignmentListController.getAcceptedAssignments);
+router.get(
+  '/accepted',
+  authMiddleware,
+  AssignmentListController.getAcceptedAssignments
+);
 
-router.put('/status', authMiddleware, AssignmentListController.updateTaskStatus);
+router.put(
+  '/status',
+  authMiddleware,
+  AssignmentListController.updateTaskStatus
+);
 
 module.exports = router;

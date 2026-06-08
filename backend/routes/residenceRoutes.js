@@ -4,7 +4,7 @@ const router = express.Router();
 
 const {
   getResidencesForUser,
-  createResidence
+  createResidence,
 } = require('../controllers/residenceController');
 
 const authMiddleware = require('../middlewares/authMiddleware');

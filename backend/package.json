@@ -7,7 +7,8 @@
     "start": "node server.js",
     "test": "jest --detectOpenHandles --forceExit",
     "dev": "nodemon server.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -25,8 +26,10 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.1",
+    "eslint-config-prettier": "^10.1.8",
     "globals": "^17.6.0",
     "jest": "^30.4.2",
+    "prettier": "^3.8.3",
     "supertest": "^7.2.2"
   }
 }
