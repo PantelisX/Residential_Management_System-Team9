@@ -27,26 +27,22 @@ async function getUserResidences(userId) {
   return rows;
 }
 
-async function createResidence(userId, address, description) {
-  /**
-   * Insert residence
-   */
-  const sql = `INSERT INTO Residence (address,description) VALUES (?, ?)`;
+async function createResidence(userId, address, description, user_role = 'tenant') {
+  const userModel = require('./userModel');
 
-  const [result] = await db.execute(sql, [address, description]);
+  const user = await userModel.getUserById(userId);
+  const owner = user?.name || address.split(',')[0] || 'Unknown';
 
-  /**
-   * Get new residence id
-   */
+  const sql = `INSERT INTO Residence (address, description, owner) VALUES (?, ?, ?)`;
+
+  const [result] = await db.execute(sql, [address, description, owner]);
+
   const residenceId = result.insertId;
 
-  /**
-   * Connect user with residence
-   */
   await db.execute(
-    `INSERT INTO UserResidence (user_id,residence_id)
-     VALUES (?, ?)`,
-    [userId, residenceId]
+    `INSERT INTO UserResidence (user_id, residence_id, user_role)
+     VALUES (?, ?, ?)`,
+    [userId, residenceId, user_role]
   );
 
   return residenceId;

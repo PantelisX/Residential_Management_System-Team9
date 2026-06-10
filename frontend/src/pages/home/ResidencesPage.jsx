@@ -19,11 +19,20 @@ function ResidencesPage() {
   const [selectedResidenceId, setSelectedResidenceId] = useState(null);
 
   const [formData, setFormData] = useState({
+    address: '',
+    description: '',
+    user_role: 'tenant'
+  });
+
+  const [taskFormData, setTaskFormData] = useState({
     category: '',
     description: '',
     start_date: '',
     tech_id: ''
   });
+
+  const [isAddResidenceModalOpen, setIsAddResidenceModalOpen] = useState(false);
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
   const fetchResidences = async () => {
     try {
@@ -65,51 +74,64 @@ function ResidencesPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleAddResidence = async () => {
-
-  const address = prompt('Enter residence address');
-
-  if (!address) return;
-
-  const description = prompt('Enter residence description');
-
-  try {
-
-    await residenceService.createResidence({
-      address,
-      description
+  const handleAddResidence = () => {
+    setIsAddResidenceModalOpen(true);
+    setFormData({
+      address: '',
+      description: '',
+      user_role: 'tenant'
     });
-
-    fetchResidences();
-
-  } catch (err) {
-
-    console.error(err);
-
-    setError(err.message || 'Failed to create residence');
-  }
-};
+  };
 
   const handleNewTask = (residenceId) => {
     setSelectedResidenceId(residenceId);
-    setIsModalOpen(true);
+    setIsTaskModalOpen(true);
+    setTaskFormData({
+      category: '',
+      description: '',
+      start_date: '',
+      tech_id: ''
+    });
   };
 
-  const handleSubmit = async (e) => {
+  const handleCreateResidence = async (e) => {
+    e.preventDefault();
+
+    try {
+      await residenceService.createResidence({
+        address: formData.address,
+        description: formData.description,
+        user_role: formData.user_role
+      });
+
+      setIsAddResidenceModalOpen(false);
+      setFormData({
+        address: '',
+        description: '',
+        user_role: 'tenant'
+      });
+
+      fetchResidences();
+    } catch (err) {
+      console.error('Error creating residence:', err);
+      setError(err.message || 'Failed to create residence');
+    }
+  };
+
+  const handleCreateTask = async (e) => {
     e.preventDefault();
 
     try {
       await maintenanceService.createTask({
         residence_id: selectedResidenceId,
-        category: formData.category,
-        description: formData.description,
-        start_date: formData.start_date,
-        tech_id: formData.tech_id
+        category: taskFormData.category,
+        description: taskFormData.description,
+        start_date: taskFormData.start_date,
+        tech_id: taskFormData.tech_id
       });
 
-      setIsModalOpen(false);
-
-      setFormData({
+      setIsTaskModalOpen(false);
+      setTaskFormData({
         category: '',
         description: '',
         start_date: '',
@@ -119,7 +141,7 @@ function ResidencesPage() {
       fetchResidences();
     } catch (err) {
       console.error('Error creating task:', err);
-      setError(err.message || 'Error creating task.');
+      setError(err.message || 'Failed to create task');
     }
   };
 
@@ -179,6 +201,12 @@ function ResidencesPage() {
                     </p>
                   )}
 
+                  {residence.user_role && (
+                    <p className="residence-role">
+                      Role: {residence.user_role}
+                    </p>
+                  )}
+
                   <div className="residence-meta">
                     <span className="task-count">
                       📋 {residence.active_task_count} Active Task
@@ -202,43 +230,116 @@ function ResidencesPage() {
 
       </div>
 
-      {isModalOpen && (
+      {isAddResidenceModalOpen && (
         <div className="modal-overlay">
-
           <div className="modal-content">
-
             <div className="modal-header">
+              <h3>Add New Residence</h3>
+              <button
+                className="close-btn"
+                onClick={() => setIsAddResidenceModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
 
-              <h3>
-                Create New Task for{' '}
+            <form onSubmit={handleCreateResidence}>
+              <div className="form-group">
+                <label htmlFor="address">Address</label>
+                <input
+                  id="address"
+                  type="text"
+                  required
+                  value={formData.address}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      address: e.target.value
+                    })
+                  }
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="description">Description</label>
+                <textarea
+                  id="description"
+                  required
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      description: e.target.value
+                    })
+                  }
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="user_role">Your Role</label>
+                <select
+                  id="user_role"
+                  required
+                  value={formData.user_role}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      user_role: e.target.value
+                    })
+                  }
+                >
+                  <option value="tenant">Tenant</option>
+                  <option value="owner">Owner</option>
+                  <option value="manager">Manager</option>
+                </select>
+              </div>
+
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setIsAddResidenceModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Add Residence
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {isTaskModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Create New Task for{' '}
                 {
                   residences.find(
                     (r) => r.residence_id === selectedResidenceId
                   )?.address
                 }
               </h3>
-
               <button
                 className="close-btn"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => setIsTaskModalOpen(false)}
               >
                 ×
               </button>
-
             </div>
 
-            <form onSubmit={handleSubmit}>
-
+            <form onSubmit={handleCreateTask}>
               <div className="form-group">
                 <label htmlFor="category">Category</label>
-
                 <select
                   id="category"
                   required
-                  value={formData.category}
+                  value={taskFormData.category}
                   onChange={(e) =>
-                    setFormData({
-                      ...formData,
+                    setTaskFormData({
+                      ...taskFormData,
                       category: e.target.value
                     })
                   }
@@ -254,14 +355,13 @@ function ResidencesPage() {
 
               <div className="form-group">
                 <label htmlFor="description">Description</label>
-
                 <textarea
                   id="description"
                   required
-                  value={formData.description}
+                  value={taskFormData.description}
                   onChange={(e) =>
-                    setFormData({
-                      ...formData,
+                    setTaskFormData({
+                      ...taskFormData,
                       description: e.target.value
                     })
                   }
@@ -270,15 +370,14 @@ function ResidencesPage() {
 
               <div className="form-group">
                 <label htmlFor="start_date">Start Date</label>
-
                 <input
                   id="start_date"
                   type="date"
                   required
-                  value={formData.start_date}
+                  value={taskFormData.start_date}
                   onChange={(e) =>
-                    setFormData({
-                      ...formData,
+                    setTaskFormData({
+                      ...taskFormData,
                       start_date: e.target.value
                     })
                   }
@@ -286,30 +385,21 @@ function ResidencesPage() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="technician">
-                  Assign Technician
-                </label>
-
+                <label htmlFor="technician">Assign Technician</label>
                 <select
                   id="technician"
                   required
-                  value={formData.tech_id}
+                  value={taskFormData.tech_id}
                   onChange={(e) =>
-                    setFormData({
-                      ...formData,
+                    setTaskFormData({
+                      ...taskFormData,
                       tech_id: e.target.value
                     })
                   }
                 >
-                  <option value="">
-                    Select Technician
-                  </option>
-
+                  <option value="">Select Technician</option>
                   {technicians.map((tech) => (
-                    <option
-                      key={tech.user_id}
-                      value={tech.user_id}
-                    >
+                    <option key={tech.user_id} value={tech.user_id}>
                       {tech.name}
                     </option>
                   ))}
@@ -317,28 +407,19 @@ function ResidencesPage() {
               </div>
 
               <div className="modal-footer">
-
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => setIsTaskModalOpen(false)}
                 >
                   Cancel
                 </button>
-
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                >
+                <button type="submit" className="btn btn-primary">
                   Create Task
                 </button>
-
               </div>
-
             </form>
-
           </div>
-
         </div>
       )}
     </div>

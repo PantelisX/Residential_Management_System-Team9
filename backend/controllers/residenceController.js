@@ -29,12 +29,13 @@ async function createResidence(req, res) {
   try {
     const userId = req.user.user_id;
 
-    const { address, description } = req.body;
+    const { address, description, user_role = 'tenant' } = req.body;
 
     const residenceId = await residenceModel.createResidence(
       userId,
       address,
-      description
+      description,
+      user_role
     );
 
     res.status(201).json({
